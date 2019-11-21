@@ -1,0 +1,110 @@
+body {
+    font-family: 'Raleway', sans-serif;
+    display: grid;
+    grid-gap: 0px;
+    grid-template-rows: .35fr 2fr .1fr;
+    grid-template-columns: 150px 150px 1fr 150px;
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+.header {
+    /* border: 2px solid green; */
+    /* border-radius: 10px; */
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 4;
+    /* background-color: rgba(87, 82, 82,.9); */
+    background: linear-gradient(to bottom, #575252 0%, #ffffff 125%);
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 100vw;
+}
+
+.nameArea {
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: 4em;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.nav {
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.navItem {
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    /* padding: 10px 20px; */
+    color: white;
+    font-size: 1.6em;
+}
+
+.mainSection {
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    min-width: 100vw;
+}
+
+.footer {
+    /* border: 2px solid yellow; */
+    color: white;
+    grid-row: 3;
+    grid-column: 1 / span 4;
+    background-color: #575252b3;
+    min-width: 100vw;
+}
+
+.navItem a {
+    /* border: 2px solid red; */
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    padding: 10px 20px;
+    border-radius: 50px 50px 0 0;
+
+    -webkit-transition: background-color 0.5s ease,
+        font-size 0.5s ease;
+    -moz-transition: background-color 0.5s ease,
+        font-size 0.5s ease;
+    -o-transition: background-color 0.5s ease,
+        font-size 0.5s ease;
+    transition: background-color 0.5s ease,
+        font-size 0.5s ease;
+}
+
+a:hover {
+    background-color: rgba(43, 53, 116, 0.5);
+    font-size: 1.65rem;
+}
+
+.mainContent {
+    display: none;
+    border: 2px dashed green;
+    min-width: 50vw;
+    min-height: 50vh;
+
+    -webkit-transition: background-color 0.5s ease
+    -moz-transition: background-color 0.5s ease
+    -o-transition: background-color 0.5s ease
+    transition: background-color 0.5s ease
+}
+
