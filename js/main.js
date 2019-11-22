@@ -6,9 +6,8 @@ function navClick(clicked_id) {
     
     switch (clicked_id) {
         case "navAboutMe":
-            document.getElementById("aboutMe").style.display = "flex";
-            document.getElementById("aboutMe").style.opacity = 1;
-            document.getElementsByClassName("mainSection")[0].style.backgroundColor = "rgba(87, 82, 82, 1)";
+            document.getElementById("aboutMe").style.display = "grid";
+            //document.getElementById("aboutMe").style.opacity = 1;
             break;
         case "navCareer":
             document.getElementById("career").style.display = "flex";
@@ -30,12 +29,12 @@ function hideAllMainContent() {
     for (i = 0; i < collection.length; i++) {
         // console.log("here: " + i);
         collection[i].style.display = "none";
-        collection[i].style.opacity = 0;
+       // collection[i].style.opacity = 0;
     }
 }
 
 function setTabProps(clicked_id) {
-    document.getElementById(clicked_id).style.backgroundColor = "rgba(87, 82, 82,1)";
+    document.getElementById(clicked_id).style.backgroundColor = "rgba(87, 82, 82,.75)";
     document.getElementById(clicked_id).style.fontSize = "1.65rem";
 }
 
