@@ -1,0 +1,282 @@
+
+body {
+  display: flex; /*comment*/
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: black;
+  color: rgb(233, 227, 227);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+}
+
+.play-area {
+  height: 65vh;
+  width: 35vw;
+  min-width: 350px;
+  min-height: 350px;
+  background: rgb(19, 18, 18);
+  border: 3px solid blue;
+  border-radius: 5px;
+  display:grid;
+  grid-template-rows: 10fr 10fr 65fr 10fr;
+  box-shadow: 3px 3px 30px 30px rgb(33, 36, 83), -3px -3px 30px 30px rgb(33, 36, 83);
+}
+
+.header-area {
+  grid-row: 1;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4em;
+}
+
+.msg-banner {
+  grid-row: 2;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(255, 162, 22);
+  font-size: 2em;
+}
+
+.game-board-area {
+  grid-row: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+}
+
+.game-board {
+  /*This class is mainly to define a container which has a fixed aspect ratio */
+  background-color: rgb(0, 255, 34);
+  box-shadow: 3px 3px 50px 20px rgb(37, 37, 37), -3px -3px 50px 20px rgb(37, 37, 37);
+
+  /* aspect ratio settings */
+  position: relative;
+  width: 60%;
+  padding-top: 60%;
+}
+
+.game-board-contents {
+  /* This class is the game grid and will hold each square */
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1px;
+}
+
+.game-board-footer {
+  grid-row: 4;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.square {
+  transition: background-color .2s;
+  background-color: rgb(37, 37, 37);
+  height: 1fr;
+  width: 1fr;
+}
+
+div.unclicked:hover {
+  background-color: rgba(92, 93, 94);
+  border-color: rgba(92, 93, 94, 0.493);
+  border-style: solid;
+  cursor: pointer;
+}
+
+div.clicked:hover {
+  cursor: not-allowed;
+}
+
+.oneXone {
+  grid-row: 1;
+  grid-column: 1;
+  border-width: 0 1px 1px 0;
+  border-radius: 0 0 5px 0;
+
+}
+
+.oneXtwo {
+  grid-row: 1;
+  grid-column: 2;
+  border-width: 0 1px 1px 1px;
+  border-radius: 0 0 5px 5px;
+}
+
+.oneXthree {
+  grid-row: 1;
+  grid-column: 3;
+  border-width: 0 0 1px 1px;
+  border-radius: 0 0 0 5px;
+}
+
+.twoXone {
+  grid-row: 2;
+  grid-column: 1;
+  border-width: 1px 1px 1px 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.twoXtwo {
+  grid-row: 2;
+  grid-column: 2;
+  border-width: 1px 1px 1px 1px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.twoXthree {
+  grid-row: 2;
+  grid-column: 3;
+  border-width: 1px 0 1px 1px;
+  border-radius: 5px 0 0 5px;
+}
+
+.threeXone {
+  grid-row: 3;
+  grid-column: 1;
+  border-width: 1px 1px 0 0;
+  border-radius: 0 5px 0 0;
+}
+
+.threeXtwo {
+  grid-row: 3;
+  grid-column: 2;
+  border-width: 1px 1px 0 1px;
+  border-radius: 5px 5px 0 0;
+}
+
+.threeXthree {
+  grid-row: 3;
+  grid-column: 3;
+  border-width: 1px 0 0 1px;
+  border-radius: 5px 0 0 0;
+}
+
+.red {
+  background: rgb(177, 58, 58);
+  border-color:  rgb(177, 58, 58)
+}
+
+.blue {
+  background: rgb(43, 43, 182);
+  border-color: rgb(43, 43, 182);
+}
+
+.button {
+  height: 35px;
+  letter-spacing: 3px;
+  color: rgb(190, 190, 190);
+  font-size: 1.5em;
+  background-color: rgb(37, 30, 30);
+  border-radius: 10px;
+  transition: background-color .5s, color 0s;
+}
+
+.button:hover {
+  background-color: rgb(136, 136, 136);
+  color: black;
+  cursor: pointer;
+}
+
+#modal {
+  background-color: rgba(0,0,0,0.75);
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	overflow: auto;
+  display: flex;
+}
+
+#modal-textbox {
+	background-color: rgba(46, 45, 45, 0.95);
+	max-height: 350px;
+  max-width: 550px;
+  border-radius: 10px;
+  margin: auto;
+
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  padding: 10px 25px 25px 25px;
+  box-shadow: 3px 3px 50px 30px rgb(37, 37, 37), -3px -3px 50px 30px rgb(37, 37, 37);
+  text-align: center;
+}
+
+/* h1 {
+  text-align: center;
+  font-size: 5rem;
+} */
+
+#modal-footer {
+  text-align: center;
+  margin-top: 25px;
+}
+
+#modal-msg {
+  text-align: center;
+  font-size: 3rem;
+}
+
+.modal-red {
+  border: 5px solid rgb(163, 22, 12);
+  box-shadow: 3px 3px 50px 10px rgb(163, 22, 12), -3px -3px 50px 10px rgb(37, 37, 37);
+}
+
+.modal-blue {
+  border: 5px solid rgb(20, 16, 231);
+  box-shadow: 3px 3px 50px 10px rgb(20, 16, 231), -3px -3px 50px 10px rgb(37, 37, 37);
+}
+
+.modal-tie {
+  border: 5px solid rgb(214, 214, 214);
+  box-shadow: 3px 3px 50px 10px rgb(214, 214, 214), -3px -3px 50px 10px rgb(37, 37, 37);
+}
+
+.modal-msg-red {
+  color: red;
+}
+
+.modal-msg-blue {
+  color: blue;
+}
+
+@media all and (max-width: 900px), (max-height: 800px) {
+  .header-area {
+    font-size: 2em;
+  }
+  .msg-banner {
+    font-size: 1.5em;
+  }
+
+  .button {
+    height: 25px;
+    letter-spacing: 1px;
+    font-size: 1em;
+    border-radius: 5px;
+  }
+
+  .game-board-footer {
+    padding: 15px 0;
+  }
+
+  .game-board {
+    box-shadow: 0 0;
+    padding-top: 65%;
+    width: 65%;
+  }
+
+  .game-board-area {
+    padding: 0;
+}
