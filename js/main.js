@@ -1,47 +1,63 @@
-function navClick(clicked_id) {
-
+function navClick(clickedId) {
     resetAllTabs();
-    setTabProps(clicked_id);
-    hideAllMainContent();
-    
-    switch (clicked_id) {
+    hideAllMainContentItems();
+    setClickedTab(clickedId);
+    displayContentItem(clickedId);
+}
+
+function displayContentItem(clickedId){
+    //This function will show the correct section based on the clicked
+    //tab
+    switch (clickedId) {
         case "navAboutMe":
-            document.getElementById("aboutMe").style.display = "grid";
-            //document.getElementById("aboutMe").style.opacity = 1;
+            displayAboutMe();
             break;
         case "navCareer":
             document.getElementById("career").style.display = "flex";
-            document.getElementById("career").style.opacity = 1;            
             break;
-        case "navProjects":            
+        case "navProjects":
             document.getElementById("projects").style.display = "flex";
-            document.getElementById("projects").style.opacity = 1;
             break;
-        case "navDogs":            
+        case "navDogs":
             document.getElementById("dogs").style.display = "flex";
-            document.getElementById("dogs").style.opacity = 1;
-            break;   
+            break;
     }
 }
 
-function hideAllMainContent() {
-    var collection = document.getElementsByClassName("mainContent");
+function hideAllMainContentItems() {
+    //This function will reset the main content panel
+    //to hide all content
+
+    var collection = document.getElementsByClassName("mainSectionItem");
     for (i = 0; i < collection.length; i++) {
-        // console.log("here: " + i);
         collection[i].style.display = "none";
-       // collection[i].style.opacity = 0;
     }
 }
 
-function setTabProps(clicked_id) {
-    document.getElementById(clicked_id).style.backgroundColor = "rgba(87, 82, 82,.75)";
-    document.getElementById(clicked_id).style.fontSize = "1.65rem";
+function setClickedTab(clickedId) {
+    //This function will style the clicked tab
+    document.getElementById(clickedId).style.backgroundColor = "rgba(87, 82, 82,.75)";
+    document.getElementById(clickedId).style.fontSize = "1.65rem";
 }
 
 function resetAllTabs() {
+    //This function will reset all navigation tabs
+    //to their original "unclicked" style.
     var collection = document.getElementsByClassName("navAnchor");
     for (i = 0; i < collection.length; i++) {
-        // console.log("here: " + i);
         collection[i].style = "navItem";
-    } 
+    }
+}
+
+function pageLoad(){
+    //This function executes on page load
+
+    //Trigger the click event on the "about me"
+    //tab so that it appears when the page is loaded.
+    document.getElementById("navAboutMe").click();
+}
+
+function displayAboutMe() {
+    //This function
+    document.getElementById("aboutMe").style.display = "grid";
 }
