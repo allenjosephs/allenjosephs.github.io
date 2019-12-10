@@ -17,45 +17,14 @@ const modalFooter = document.querySelector("#modal-footer");
 
 const rulesClose = document.querySelector("#close-rules");
 
-// class Stack {
-//   // Stacks exist within towers and hold the blocks.
-//   // They are dumb and assume they are handed blocks in the correct order.
-//   // The top-most block (smallest level) should be stored in position [0] of the stack
-//   constructor(blocks = []) {
-//     this.stack = blocks;
-//   }
+const minMoveCount = document.querySelector("#min-moves");
+const mCount = document.querySelector("#move-count");
+const solveTime = document.querySelector("#time-to-solve");
 
-//   getTopBlock() {
-//     return this.stack[0];
-//   }
 
-//   getBottomBlock() {
-//     return this.stack[this.stack.length - 1];
-//   }
-
-//   getLength() {
-//     //console.log("here: ", this.stack);
-//     if (!(this.stack === undefined)) {
-//       return this.stack.length;
-//     } else {
-//       return 0;
-//     }
-//   }
-
-//   addBlockToStack(block) {
-//     this.stack.push(block);
-//   }
-
-//   removeTopBlockFromStack() {
-//     this.stack.pop();
-//     console.log(this.stack);
-//   }
-
-//   getStackContents() {
-//     return this.stack;
-//   }
-
-// }
+let moveCount = 0;
+let minMoves = 0;
+let timeToSolve = 0;
 
 class Block {
   constructor(id) {
@@ -64,10 +33,8 @@ class Block {
 }
 
 class Tower {
-  //All rule logic for the game is handled by Tower
   constructor(id, blocks = []) {
     this.id = id;
-
     // Sort the blocks array in ascending order by level
     if (blocks.length > 0) {
       blocks.sort((a, b) => {
@@ -78,8 +45,6 @@ class Tower {
   }
 
   addBlock(block) {
-    //console.log(`block.level: ${block.level}, topBlock level: ${this.stack.getTopBlock() === undefined ? 'NA' : this.stack.getTopBlock().level}`);
-
     if (!this.blocks || (block.id < this.blocks[0].id)){
       this.blocks.push(block);
       return true;
@@ -116,15 +81,23 @@ function initGame() {
   t1 = new Tower(tower1.getAttribute("id"),
   [new Block(1),
       new Block(2),
-      new Block(3),
-      new Block(4),
-      new Block(5),
-      new Block(6),
-      new Block(7),
-      new Block(8),
-      new Block(9),
-      new Block(10)
+      new Block(3)
+      // new Block(4),
+      // new Block(5),
+      // new Block(6),
+      // new Block(7),
+      // new Block(8),
+      // new Block(9),
+      // new Block(10)
     ]);
+
+    minMoves = 2 ** t1.blocks.length - 1;
+    timeToSolve = Math.ceil(minMoves / 60);
+
+    solveTime.innerText = "Time @ 1/sec: " + timeToSolve + " minutes";
+    minMoveCount.innerText = "Min moves: " + minMoves;
+    mCount.innerText = "Move count: " + moveCount;
+
 
     console.log("t1: ", t1);
 
@@ -164,6 +137,7 @@ gameBoardContents.addEventListener("drop", e => {
     moveBlock(parseInt(divId), fromTowerId, toTowerId);
     resetDraggable();
     e.dataTransfer.clearData();
+    moveCount++;
   }
 });
 
