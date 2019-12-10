@@ -97,6 +97,9 @@ body {
 
 .tower {
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
   transition: background-color .2s;
   background-color: rgb(37, 37, 37);
   height: 1fr;
@@ -147,19 +150,64 @@ body {
   border: 1px dashed red;
 }
 
-/* .square {
+.block {
   transition: background-color .2s;
-  background-color: rgb(37, 37, 37);
-  height: 1fr;
-  width: 1fr;
-} */
+  border-width: 1px 4px;
+  border-style: solid;
+  border-color: black;
+  background-color: rgb(33, 129, 21);
+  height: 7%;
+}
 
-div.unclicked:hover {
+.level10 {
+  width: 98%;
+}
+
+.level9 {
+  width: 88%;
+}
+
+.level8 {
+  width: 78%;
+}
+
+.level7 {
+  width: 68%;
+}
+
+.level6 {
+  width: 58%;
+}
+
+.level5 {
+  width: 48%;
+}
+
+.level4 {
+  width: 38%;
+}
+
+.level3 {
+  /* min-width: 100px; */
+  width: 28%;
+}
+
+.level2 {
+  /* min-width: 75px; */
+  width: 18%;
+}
+
+.level1 {
+  /* min-width: 50px; */
+  width: 8%
+}
+
+/* div.unclicked:hover {
   background-color: rgba(92, 93, 94);
   border-color: rgba(92, 93, 94, 0.493);
   border-style: solid;
   cursor: pointer;
-}
+} */
 
 .button {
   /* height: 35px; */
