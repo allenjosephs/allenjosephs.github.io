@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link href="https://fonts.googleapis.com/css?family=Amatic+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <title>Tower of Hanoi</title>
+</head>
+<body>
+  <main>
+    <section class="play-area">
+      <section class="header-area">
+        <!-- <div id="left">Tower of Hanoi1</div> -->
+        <div id="title">Tower of Hanoi</div>
+        <div id="rules-area"><button id="rules-button" class="button">How to Play</button></div>
+      </section>
+      <section class="game-board-area">
+        <div class="game-board">
+          <div class="game-board-contents">
+            <div id="tower1" class="tower"></div>
+            <div id="tower2" class="tower"></div>
+            <div id="tower3" class="tower"></div>
+          </div>
+        </div>
+      </section>
+      <section class="game-controls-area">
+        <button id="reset-button" class="button">Reset Game</button>
+        <button id="solve-me-button" class="button">Solve Me!</button>
+      </section>
+      <section class="game-stats-area">
+        <div id="min-moves" class="stat">Min moves: 32</div>
+        <div id="move-count" class="stat">Move count: 985</div>
+        <div id="time-to-solve" class="stat">Time @ 1/sec: 23,000 years</div>
+      </section>
+      <section class="game-board-footer">
+        <button id="reset" class="button">Reset Game</button>
+      </section>
+    </section>
+  </main>
+  <div id="modal">
+    <div id="modal-content">
+      <div id="modal-title"></div>
+      <div id="modal-msg"></div>
+      <div id="modal-footer">
+        <button id="close-rules" class="button" href="#">Close</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>
