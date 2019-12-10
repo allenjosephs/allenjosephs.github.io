@@ -155,15 +155,14 @@ gameBoardContents.addEventListener("drop", e => {
   // data[0] = id of the div, data[1] = id of the tower this div is moving from
   let data = e.dataTransfer.getData("text").split("_");
   let divId = data[0];
-  let fromTower = data[1];
-  let toTower = e.target.id;
+  let fromTowerId = data[1];
+  let toTowerId = e.target.id;
 
-  if (e.target.classList.contains("tower") && dropAllowed(divId, fromTower, toTower)) {
+  if (e.target.classList.contains("tower") && dropAllowed(divId, fromTowerId, toTowerId)) {
     e.preventDefault();
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
-
-    moveBlock(parseInt(divId), fromTower, toTower);
-
+    moveBlock(parseInt(divId), fromTowerId, toTowerId);
+    resetDraggable();
     e.dataTransfer.clearData();
   }
 });
@@ -183,11 +182,12 @@ function drag(e) {
 
 ///////////////// END DRAG-AND-DROP FUNCTIONS /////////////
 
-function dropAllowed(divId, fromTower, toTower) {
+function dropAllowed(divId, fromTowerId, toTowerId) {
   let dropAllowed = false;
   let tower;
-  console.log();
-  switch (toTower) {
+
+  //Determine which target tower we're working with
+  switch (toTowerId) {
     case t1.id:
       tower = t1;
       break;
@@ -199,41 +199,43 @@ function dropAllowed(divId, fromTower, toTower) {
       break;
   }
 
-  console.log("divId: ", divId, " fromTower: ", fromTower, " toTower: ", toTower);
-
-  // let draggedElement = document.getElementById(`${e.dataTransfer.getData("text")}`);
+  console.log("divId: ", divId, " fromTower: ", fromTowerId, " toTower: ", toTowerId);
 
   if (tower.blocks === undefined || tower.blocks.length === 0) {
+    //No blocks in this tower: ok to drop!
     dropAllowed = true;
-  } else if (parseInt(divId) < [0].id) {
-    console.log("YAY");
-
+  } else if (divId < tower.blocks[0].id) {
+    //Div being moved is of lower rank than the top block in this tower: ok to drop!
+    dropAllowed = true;
+  } else {
+    //Nope!
+    dropAllowed = false;
   }
   return dropAllowed;
 }
 
-function moveBlock(blockId, fromTower, toTower) {
+function moveBlock(blockId, fromTowerId, toTowerId) {
   //removes a block from current tower and adds to the top of targetTower
-  let removedBlock = removeBlock(fromTower);
-  addBlock(removedBlock, toTower);
+  let removedBlock = removeBlock(fromTowerId);
+  addBlock(removedBlock, toTowerId);
 }
 
-function removeBlock(fromTower) {
+function removeBlock(fromTowerId) {
   //cycle through each tower and remove this block from whichever one it resides in
   let removedBlock;
-  switch (fromTower) {
+  switch (fromTowerId) {
     case "tower1":
-     console.log("tower1 hit");
+     console.log("tower1 remove");
      removedBlock = t1.blocks.shift();
      console.log(t1);
      break;
     case "tower2":
-      console.log("tower2 hit");
+      console.log("tower2 remove");
       removedBlock = t2.blocks.shift();
       console.log(t2);
       break;
     case "tower3":
-      console.log("tower3 hit");
+      console.log("tower3 remove");
       removedBlock = t3.blocks.shift();
       console.log(t3);
       break;
@@ -258,6 +260,44 @@ function addBlock(block, toTower) {
       t3.blocks.unshift(block);
       console.log(t3);
       break;
+  }
+}
+
+function resetDraggable() {
+  //Iterate through each tower and set draggable to the top element of each
+  tower1.childNodes.forEach(node => {
+    node.setAttribute("draggable", false);
+    node.classList.remove("draggable");
+    node.removeEventListener("dragstart", drag);
+  });
+
+  if (tower1.childElementCount > 0) {
+    tower1.firstChild.setAttribute("draggable", true);
+    tower1.firstChild.classList.add("draggable");
+    tower1.firstChild.addEventListener("dragstart", drag);
+  }
+
+  tower2.childNodes.forEach(node => {
+    node.setAttribute("draggable", false);
+    node.classList.remove("draggable");
+    node.removeEventListener("dragstart", drag);
+  });
+  if (tower2.childElementCount > 0) {
+    tower2.firstChild.setAttribute("draggable", true);
+    tower2.firstChild.classList.add("draggable");
+    tower2.firstChild.addEventListener("dragstart", drag);
+  }
+
+  tower3.childNodes.forEach(node => {
+    node.setAttribute("draggable", false);
+    node.classList.remove("draggable");
+    node.removeEventListener("dragstart", drag);
+  });
+
+  if (tower3.childElementCount > 0) {
+    tower3.firstChild.setAttribute("draggable", true);
+    tower3.firstChild.classList.add("draggable");
+    tower3.firstChild.addEventListener("dragstart", drag);
   }
 }
 
