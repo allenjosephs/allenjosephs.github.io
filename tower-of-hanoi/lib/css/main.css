@@ -1,6 +1,7 @@
 
 html {
-  font-size: 16px;
+  /* font-size: 16px; */
+  font-size: .75vw;
 }
 
 body {
@@ -39,7 +40,7 @@ body {
 }
 
 #title {
-  font-size: 3rem;
+  font-size: 5rem;
   grid-column: 2;
 }
 
@@ -65,17 +66,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 .25% .25% .25%;
 }
 
 .game-board {
   /*This class is mainly to define a container which has a fixed aspect ratio */
-  background-color: rgb(196, 197, 115);
+  /* background-color: rgb(196, 197, 115); */
   /* box-shadow: 3px 3px 50px 20px rgb(37, 37, 37), -3px -3px 50px 20px rgb(37, 37, 37); */
 
   /* aspect ratio settings */
   position: relative;
-  width: 95%;
+  width: 90%;
   padding-top: 30%;
 }
 
@@ -114,32 +114,52 @@ body {
 
 #tower2 {
   grid-column: 2;
-  background-color: red;
+  background-color: aqua;
 }
 
 #tower3 {
   grid-column: 3;
-  background-color: yellow;
+  background-color: aqua;
 }
 
 .game-controls-area {
   /* border: 1px dashed green; */
-  grid-row: 3;
+  grid-row: 4;
   display:flex;
   justify-content: space-evenly;
   align-items: center;
 }
 
 .game-stats-area {
-  grid-row: 4;
-  display:flex;
-  justify-content: space-between;
+  /* border: 1px solid red; */
+  color: black;
+  grid-row: 3;
+
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
   align-items: center;
+  background-image: linear-gradient(to right, greenyellow, yellow, greenyellow);
+  border: 1px solid red;
+  margin: 0 1% 0 1%;
 }
 
 .stat {
-  font-size: 2em;
+  font-size: 3rem;
   letter-spacing: 3px;
+
+}
+
+#min-moves {
+  grid-column: 1;
+}
+
+#move-count {
+  grid-column: 2;
+}
+
+#time-to-solve {
+  grid-column: 3;
 }
 
 .game-board-footer {
@@ -147,7 +167,7 @@ body {
   display:flex;
   justify-content: center;
   align-items: center;
-  border: 1px dashed red;
+  /* border: 1px dashed red; */
 }
 
 .block {
@@ -157,11 +177,23 @@ body {
   border-color: black;
   background-color: rgb(33, 129, 21);
   height: 7%;
+
 }
 
 .draggable:hover {
   cursor: move;
+  border: 3px dotted black;
+  background-color: rgb(201, 198, 44);
+  box-shadow: 3px 3px 20px 10px rgba(0, 0, 0, 0.336), -3px -3px 20px 10px rgba(0, 0, 0, 0.336);
 }
+
+/* .draggable:hover:focus {
+  cursor: move;
+  border: 3px dotted black;
+  background-color: rgb(201, 198, 44);
+  box-shadow: 3px 3px 20px 10px rgba(0, 0, 0, 0.336), -3px -3px 20px 10px rgba(0, 0, 0, 0.336);
+} */
+
 
 .block:hover:not(.draggable) {
   cursor: not-allowed;
@@ -229,7 +261,7 @@ body {
 }
 
 .button:hover {
-  background-color: rgb(136, 136, 136);
+  background-color: rgb(253, 252, 252);
   color: black;
   cursor: pointer;
 }

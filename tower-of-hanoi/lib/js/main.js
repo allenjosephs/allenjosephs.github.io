@@ -21,7 +21,6 @@ const minMoveCount = document.querySelector("#min");
 const mCount = document.querySelector("#count");
 const solveTime = document.querySelector("#time");
 
-
 let moveCount = 0;
 let minMoves = 0;
 let timeToSolve = 0;
@@ -71,24 +70,20 @@ function initGame() {
   t1 = new Tower(tower1.getAttribute("id"),
   [new Block(1),
       new Block(2),
-      new Block(3)
-      // new Block(4),
-      // new Block(5),
-      // new Block(6),
-      // new Block(7),
-      // new Block(8),
-      // new Block(9),
-      // new Block(10)
+      new Block(3),
+      new Block(4),
+      new Block(5),
+      new Block(6),
+      new Block(7),
+      new Block(8),
+      new Block(9),
+      new Block(10)
     ]);
   t2 = new Tower(tower2.getAttribute("id"));
   t3 = new Tower(tower3.getAttribute("id"));
 
-  minMoves = 2 ** t1.blocks.length - 1;
-  minMoveCount.innerText = minMoves;
-
-  timeToSolve = Math.ceil(minMoves / 60);
-  solveTime.innerText = timeToSolve + " minutes";
-
+  minMoveCount.innerText = calcMinMoves(t1.blocks.length);
+  solveTime.innerText = calcTimeToSolve(t1.blocks.length);
   mCount.innerText = moveCount;
 
   let newBlock;
@@ -143,20 +138,6 @@ function drag(e) {
 
 function dropAllowed(divId, fromTower, toTower) {
   let dropAllowed = false;
-  //let tower;
-
-  //Determine which target tower we're working with
-  // switch (toTowerId) {
-  //   case t1.id:
-  //     tower = t1;
-  //     break;
-  //   case t2.id:
-  //     tower = t2;
-  //     break;
-  //   case t3.id:
-  //     tower = t3;
-  //     break;
-  // }
 
   //console.log("divId: ", divId, " fromTower: ", fromTowerId, " toTower: ", toTowerId);
 
@@ -171,6 +152,14 @@ function dropAllowed(divId, fromTower, toTower) {
     dropAllowed = false;
   }
   return dropAllowed;
+}
+
+function calcTimeToSolve(blockCount) {
+  return Math.ceil(calcMinMoves(blockCount) * 3 / 60);
+}
+
+function calcMinMoves(blockCount) {
+  return (2 ** blockCount - 1);
 }
 
 function moveBlock(fromTower, toTower) {
