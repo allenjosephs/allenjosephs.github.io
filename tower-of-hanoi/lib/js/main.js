@@ -1,3 +1,5 @@
+const rules = "The object of the game is to move all blocks from the left-hand tower to the right hand tower.  There are only two rules:<ul><li> Only one block may be moved at a time</li><li>At no time can a larger block be placed on top of a smaller block</li></ul>";
+
 const gameBoard = document.querySelector(".game-board");
 const gameBoardContents = document.querySelector(".game-board-contents");
 
@@ -24,6 +26,10 @@ const solveTime = document.querySelector("#time");
 let moveCount = 0;
 let minMoves = 0;
 let timeToSolve = 0;
+
+// This will hold the object being dragged (a block).  In many cases drag
+// events do not have access to the object being dragged; this is my workaround.
+let draggedBlock;
 
 class Block {
   constructor(id) {
@@ -110,18 +116,52 @@ gameBoardContents.addEventListener("drop", e => {
   let fromTowerId = data[1];
   let toTowerId = e.target.id;
 
-  if (e.target.classList.contains("tower") &&
-        dropAllowed(divId, getTowerById(fromTowerId), getTowerById(toTowerId))) {
+  console.log("drop: ", e);
+  console.log(data, divId, toTowerId);
+
+  e.target.classList.remove("valid-drop-zone");
+  e.target.classList.remove("invalid-drop-zone");
+
+  if (e.target.classList.contains("drop-zone") &&
+        dropAllowed(divId, getTowerById(toTowerId))) {
     e.preventDefault();
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
     moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
     setDraggable();
-    moveCount++;
-    updateMoveCount(moveCount);
+    updateMoveCount();
     e.dataTransfer.clearData();
     if (checkForWin()) {
       alert("you win");
     };
+  }
+});
+
+gameBoardContents.addEventListener("dragend", e => {
+  e.target.classList.remove("dragging");
+});
+
+gameBoardContents.addEventListener("dragenter", e=> {
+  // data[0] = id of the div, data[1] = id of the tower this div is moving from
+  let data = e.dataTransfer.getData("text").split("_");
+  let divId = data[0];
+  let toTowerId = e.target.id;
+
+  console.log("dragenter: ", e);
+  console.log(data, divId, toTowerId);
+
+  if (e.target.classList.contains("drop-zone")) {
+    console.log("db.id: ", draggedBlock.id);
+    if (dropAllowed(parseInt(draggedBlock.id), getTowerById(toTowerId))) {      e.target.classList.add("valid-drop-zone");
+    } else {
+      e.target.classList.add("invalid-drop-zone");
+    }
+  }
+});
+
+gameBoardContents.addEventListener("dragleave", e => {
+  if (e.target.classList.contains("drop-zone")) {
+    e.target.classList.remove("valid-drop-zone");
+    e.target.classList.remove("invalid-drop-zone");
   }
 });
 
@@ -131,21 +171,31 @@ gameBoardContents.addEventListener("dragover", e => {
 
 function drag(e) {
   //set the data to the div's ID + current tower location (e.path[1].id) for future use
+  console.log("drag: ", e);
+
+  //certain drag events do not have access to the object being dragged.
+  //thus, storing the dragged object into a global variable
+  draggedBlock = document.getElementById(e.target.id);
+  console.log("draggedBlock: ", draggedBlock);
   e.dataTransfer.setData("text", `${e.target.id}_${e.path[1].id}`);
+  e.target.classList.add("dragging");
 }
 
 ///////////////// END DRAG-AND-DROP FUNCTIONS /////////////
 
-function dropAllowed(divId, fromTower, toTower) {
+function dropAllowed(divId, toTower) {
   let dropAllowed = false;
 
   //console.log("divId: ", divId, " fromTower: ", fromTowerId, " toTower: ", toTowerId);
-
   if (toTower.blocks === undefined || toTower.blocks.length === 0) {
     //No blocks in this tower: ok to drop!
     dropAllowed = true;
-  } else if (divId < toTower.blocks[0].id) {
-    //Div being moved is of lower rank than the top block in this tower: ok to drop!
+  } else if (divId <= toTower.blocks[0].id) {
+    // Div being moved is of lower or equal rank than the top block in this tower:
+    // ok to drop!
+    // Note that the only time the ids are equal is when the user starts a drag
+    // event but then releases the block back onto the same tower from which the
+    // block came.
     dropAllowed = true;
   } else {
     //Nope!
@@ -200,8 +250,9 @@ function addDraggable(tower) {
   tower.firstChild.addEventListener("dragstart", drag);
 }
 
-function updateMoveCount(newCount) {
-  mCount.innerText = newCount;
+function updateMoveCount() {
+  moveCount++;
+  mCount.innerText = moveCount;
 }
 
 function getTowerById(id) {
@@ -233,7 +284,7 @@ function checkForWin() {
 
 rulesBtn.addEventListener("click", e => {
   e.preventDefault();
-  showModal("How to Play", "pick a block and move....");
+  showModal("How to Play", rules);
 });
 
 rulesClose.addEventListener("click", e => {
@@ -247,8 +298,8 @@ resetBtn.addEventListener("click", e => {
 });
 
 function showModal(title, msg) {
-  modalTitle.innerText = title;
-  modalMsg.innerText = msg;
+  modalTitle.innerHTML = title;
+  modalMsg.innerHTML = msg;
   modal.style.display = 'flex';
 }
 
