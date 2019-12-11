@@ -278,45 +278,51 @@ body {
   display: none;
   justify-content: center;
   align-items: flex-start;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 #modal-content {
+  background-color: rgba(0,0,0,0.95);
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  margin: 5%;
-  border: 1px solid red;
-  max-width: 40%;
-  max-height: 40%;
+  margin: 15vh;
+  border: 1px solid white;
+  width: 25vw;
+  height: 50vh;
 }
 
 #modal-title {
   display: flex;
   grid-row: 1;
-  font-size: 3rem;
+  font-size: 6rem;
   justify-content: center;
-  padding: 2%;
-  border: 1px dashed greenyellow;
+  align-items: center;
+  /* border: 1px dashed greenyellow; */
+
 }
 
 #modal-msg {
-  border: 1px dashed yellow;
+  font-family: sans-serif;
+  /* border: 1px dashed yellow; */
   display: flex;
+  font-size: 1.5rem;
   grid-row: 2;
-	background-color: rgba(46, 45, 45, 0.95);
+  flex-direction: column;
+  padding: 5% 5% 0 5%;
+	/* background-color: rgba(46, 45, 45, 0.95); */
   border-radius: 10px;
-  text-align: center;
+
 }
 
 #modal-footer {
-  border: 1px dashed blue;
+  /* border: 1px dashed blue; */
   display: flex;
   grid-row: 3;
   justify-content: center;
   align-items: center;
 }
 
-/* @media all and (max-width: 900px), (max-height: 800px) {
+@media all and (max-width: 900px), (max-height: 800px) {
   .header-area {
     font-size: 2em;
   }
@@ -343,4 +349,4 @@ body {
 
   .game-board-area {
     padding: 0;
-} */
+}
