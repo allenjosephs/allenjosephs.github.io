@@ -1,25 +1,29 @@
 
 html {
   /* font-size: 16px; */
-  font-size: .75vw;
+
+  /*
+    Tips from "Getting started with fluid typography: https://www.smashingmagazine.com/2016/05/fluid-typography/
+  */
+  /* font-size: 1vw; */
+  font-size: calc(3px + .75vw);
 }
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   background: black;
   color: rgb(233, 227, 227);
   font-family: 'Amatic SC', cursive, sans-serif;
-  font-size: 1rem;
+  /* font-size: 1em; */
 }
 
 .play-area {
   height: 70vh;
   width: 70vw;
   min-width: 350px;
-  min-height: 350px;
   background: rgb(19, 18, 18);
   border: 3px solid blue;
   border-radius: 5px;
@@ -31,7 +35,6 @@ body {
 }
 
 .header-area {
-  border: 1px solid red;
   padding: 0 5%;
   grid-row: 1;
   display: grid;
@@ -43,7 +46,7 @@ body {
 }
 
 #title {
-  font-size: 5rem;
+  font-size: 4em;
   grid-column: 2;
 }
 
@@ -61,17 +64,16 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .game-board {
   /*This class is mainly to define a container which has a fixed aspect ratio */
-  /* background-color: rgb(196, 197, 115); */
-  /* box-shadow: 3px 3px 50px 20px rgb(37, 37, 37), -3px -3px 50px 20px rgb(37, 37, 37); */
-
+  /* border: 1px solid red; */
   /* aspect ratio settings */
   position: relative;
   width: 90%;
+  /* height: 90%; */
   padding-top: 30%;
 }
 
@@ -85,7 +87,7 @@ body {
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 1px;
@@ -97,26 +99,24 @@ body {
   justify-content: flex-end;
   align-items: center;
   background-color: rgb(37, 37, 37);
-  height: 1fr;
+  /* height: 1fr; */
   width: 1fr;
   margin: 20px;
-  transition: background-color .2s;
+  transition: all .25s ease;
   background-color: aqua;
+
 }
 
 #tower1 {
   grid-column: 1;
-
 }
 
 #tower2 {
   grid-column: 2;
-  /* background-color: aqua; */
 }
 
 #tower3 {
   grid-column: 3;
-  /* background-color: aqua; */
 }
 
 .dragging {
@@ -124,47 +124,38 @@ body {
 }
 
 .drop-zone {
+  opacity: 1;
 }
 
 .valid-drop-zone {
-  background-color: rgb(252, 252, 252);
-  border: 3px solid green;
+  background-color: rgb(157, 248, 187);
+  border: 5px solid green;
 }
 
 .invalid-drop-zone {
-  background-color: rgb(252, 252, 252);
-  border: 3px solid red;
-}
-
-.game-controls-area {
-  /* border: 1px dashed green; */
-  grid-row: 4;
-  display:flex;
-  justify-content: space-evenly;
-  align-items: center;
+  background-color: rgb(253, 234, 234);
+  border: 5px solid red;
 }
 
 .game-stats-area {
-  /* border: 1px solid red; */
+  /* border: 1px solid blue; */
   color: black;
   grid-row: 3;
   width: 90%;
+  height: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
   align-items: center;
   background-image: linear-gradient(to right, greenyellow, yellow, greenyellow);
-  margin: 0 1% 0 1%;
 }
 
 .stat {
-  font-size: 2.5em;
-  letter-spacing: 3px;
-
+  font-size: 2em;
+  letter-spacing: 2px;
 }
 
 #min-moves {
-  border: 2px dashed blue;
   grid-column: 1;
 }
 
@@ -176,6 +167,17 @@ body {
   grid-column: 3;
 }
 
+.game-controls-area {
+  /* border: 1px solid red; */
+  grid-row: 4;
+  display:flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 90%;
+  margin-top: 1%;
+  /* height: 100%; */
+}
+
 .game-board-footer {
   grid-row: 5;
   display:flex;
@@ -185,29 +187,31 @@ body {
 }
 
 .block {
-  transition: background-color .2s;
-  border-width: 1px 4px;
+  transition: all .2s;
+  border-width: 1px 2px;
   border-style: solid;
   border-color: black;
-  background-color: rgb(33, 129, 21);
+  /* background-color: rgb(33, 129, 21); */
+  background-image: linear-gradient(
+    to right,
+    rgb(23, 87, 15),
+    rgb(33, 129, 21) 10%,
+    rgb(109, 155, 103) 35%,
+    rgb(125, 158, 119) 50%,
+    rgb(109, 155, 103) 65%,
+    rgb(33, 129, 21) 90%,
+    rgb(23, 87, 15));
   height: 7%;
+  border-radius: 30% 30% 0 0;;
 
 }
 
 .draggable:hover {
   cursor: move;
   border: 3px dotted black;
-  background-color: rgb(201, 198, 44);
-  box-shadow: 3px 3px 20px 10px rgba(31, 28, 75, 0.336), -3px -3px 20px 10px rgba(31, 28, 75, 0.336);
+  background: rgb(201, 198, 44);
+  /* box-shadow: 3px 3px 20px 10px rgba(31, 28, 75, 0.336), -3px -3px 20px 10px rgba(31, 28, 75, 0.336); */
 }
-
-/* .draggable:hover:focus {
-  cursor: move;
-  border: 3px dotted black;
-  background-color: rgb(201, 198, 44);
-  box-shadow: 3px 3px 20px 10px rgba(0, 0, 0, 0.336), -3px -3px 20px 10px rgba(0, 0, 0, 0.336);
-} */
-
 
 .block:hover:not(.draggable) {
   cursor: not-allowed;
@@ -242,36 +246,25 @@ body {
 }
 
 .level3 {
-  /* min-width: 100px; */
   width: 28%;
 }
 
 .level2 {
-  /* min-width: 75px; */
   width: 18%;
 }
 
 .level1 {
-  /* min-width: 50px; */
   width: 8%
 }
 
-/* div.unclicked:hover {
-  background-color: rgba(92, 93, 94);
-  border-color: rgba(92, 93, 94, 0.493);
-  border-style: solid;
-  cursor: pointer;
-} */
-
 .button {
-  /* height: 35px; */
-  letter-spacing: 3px;
+  letter-spacing: .25rem;
   color: rgb(190, 190, 190);
-  font-size: 2rem;
+  font-size: 2em;
   font-weight: 900;
   background-color: rgb(37, 30, 30);
   border-radius: 10px;
-  transition: background-color .5s, color .5s;
+  transition: all .25s ease;
 }
 
 .button:hover {
@@ -308,7 +301,7 @@ body {
 #modal-title {
   display: flex;
   grid-row: 1;
-  font-size: 6rem;
+  font-size: 5em;
   justify-content: center;
   align-items: center;
   /* border: 1px dashed greenyellow; */
@@ -319,7 +312,7 @@ body {
   font-family: sans-serif;
   /* border: 1px dashed yellow; */
   display: flex;
-  font-size: 1.5rem;
+  font-size: 1em;
   grid-row: 2;
   flex-direction: column;
   padding: 5% 5% 0 5%;
@@ -336,8 +329,13 @@ body {
   align-items: center;
 }
 
+@media screen and (min-width: 800px) {
+  html {
+    font-size: 1vw;
+  }
+}
 
-@media all and (max-width: 900px), (max-height: 800px) {
+/* @media all and (max-width: 900px), (max-height: 800px) {
   .header-area {
     font-size: 2em;
   }
@@ -367,4 +365,4 @@ body {
     padding: 0;
 
   }
-}
+} */

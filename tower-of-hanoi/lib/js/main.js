@@ -1,5 +1,7 @@
 const rules = "The object of the game is to move all blocks from the left-hand tower to the right hand tower.  There are only two rules:<ul><li> Only one block may be moved at a time</li><li>At no time can a larger block be placed on top of a smaller block</li></ul>";
 
+const youWin = "Congrats on the big win!";
+
 const gameBoard = document.querySelector(".game-board");
 const gameBoardContents = document.querySelector(".game-board-contents");
 
@@ -76,20 +78,21 @@ function initGame() {
   t1 = new Tower(tower1.getAttribute("id"),
   [new Block(1),
       new Block(2),
-      new Block(3),
-      new Block(4),
-      new Block(5),
-      new Block(6),
-      new Block(7),
-      new Block(8),
-      new Block(9),
-      new Block(10)
+      new Block(3)
+      // new Block(4),
+      // new Block(5),
+      // new Block(6),
+      // new Block(7),
+      // new Block(8),
+      // new Block(9),
+      // new Block(10)
     ]);
   t2 = new Tower(tower2.getAttribute("id"));
   t3 = new Tower(tower3.getAttribute("id"));
 
   minMoveCount.innerText = calcMinMoves(t1.blocks.length);
   solveTime.innerText = calcTimeToSolve(t1.blocks.length);
+  moveCount = 0;
   mCount.innerText = moveCount;
 
   let newBlock;
@@ -116,9 +119,6 @@ gameBoardContents.addEventListener("drop", e => {
   let fromTowerId = data[1];
   let toTowerId = e.target.id;
 
-  console.log("drop: ", e);
-  console.log(data, divId, toTowerId);
-
   e.target.classList.remove("valid-drop-zone");
   e.target.classList.remove("invalid-drop-zone");
 
@@ -131,7 +131,7 @@ gameBoardContents.addEventListener("drop", e => {
     updateMoveCount();
     e.dataTransfer.clearData();
     if (checkForWin()) {
-      alert("you win");
+      showModal("You Win!", youWin);
     };
   }
 });
@@ -146,11 +146,7 @@ gameBoardContents.addEventListener("dragenter", e=> {
   let divId = data[0];
   let toTowerId = e.target.id;
 
-  console.log("dragenter: ", e);
-  console.log(data, divId, toTowerId);
-
   if (e.target.classList.contains("drop-zone")) {
-    console.log("db.id: ", draggedBlock.id);
     if (dropAllowed(parseInt(draggedBlock.id), getTowerById(toTowerId))) {      e.target.classList.add("valid-drop-zone");
     } else {
       e.target.classList.add("invalid-drop-zone");
@@ -171,12 +167,10 @@ gameBoardContents.addEventListener("dragover", e => {
 
 function drag(e) {
   //set the data to the div's ID + current tower location (e.path[1].id) for future use
-  console.log("drag: ", e);
 
   //certain drag events do not have access to the object being dragged.
   //thus, storing the dragged object into a global variable
   draggedBlock = document.getElementById(e.target.id);
-  console.log("draggedBlock: ", draggedBlock);
   e.dataTransfer.setData("text", `${e.target.id}_${e.path[1].id}`);
   e.target.classList.add("dragging");
 }
