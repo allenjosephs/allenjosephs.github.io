@@ -17,9 +17,9 @@ const modalFooter = document.querySelector("#modal-footer");
 
 const rulesClose = document.querySelector("#close-rules");
 
-const minMoveCount = document.querySelector("#min-moves");
-const mCount = document.querySelector("#move-count");
-const solveTime = document.querySelector("#time-to-solve");
+const minMoveCount = document.querySelector("#min");
+const mCount = document.querySelector("#count");
+const solveTime = document.querySelector("#time");
 
 
 let moveCount = 0;
@@ -44,20 +44,6 @@ class Tower {
     this.blocks = blocks;
   }
 
-  addBlock(block) {
-    if (!this.blocks || (block.id < this.blocks[0].id)){
-      this.blocks.push(block);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  removeBlock() {
-    console.log("in remove block");
-    this.blocks.pop();
-  }
-
   hasBlock(blockId) {
     this.blocks.forEach(b => {
       if (b.getId() === blockId) {
@@ -78,6 +64,10 @@ initGame();
 
 function initGame() {
 
+  tower1.innerHTML = "";
+  tower2.innerHTML = "";
+  tower3.innerHTML = "";
+
   t1 = new Tower(tower1.getAttribute("id"),
   [new Block(1),
       new Block(2),
@@ -90,22 +80,18 @@ function initGame() {
       // new Block(9),
       // new Block(10)
     ]);
-
-    minMoves = 2 ** t1.blocks.length - 1;
-    timeToSolve = Math.ceil(minMoves / 60);
-
-    solveTime.innerText = "Time @ 1/sec: " + timeToSolve + " minutes";
-    minMoveCount.innerText = "Min moves: " + minMoves;
-    mCount.innerText = "Move count: " + moveCount;
-
-
-    console.log("t1: ", t1);
-
   t2 = new Tower(tower2.getAttribute("id"));
   t3 = new Tower(tower3.getAttribute("id"));
 
-  let newBlock;
+  minMoves = 2 ** t1.blocks.length - 1;
+  minMoveCount.innerText = minMoves;
 
+  timeToSolve = Math.ceil(minMoves / 60);
+  solveTime.innerText = timeToSolve + " minutes";
+
+  mCount.innerText = moveCount;
+
+  let newBlock;
   for (let i = 0; i < t1.blocks.length; i++) {
     newBlock = document.createElement("div");
     newBlock.setAttribute("id", t1.blocks[i].id);
@@ -123,21 +109,24 @@ function initGame() {
 
 gameBoardContents.addEventListener("drop", e => {
 
-  console.log("drop: ", e)
-
   // data[0] = id of the div, data[1] = id of the tower this div is moving from
   let data = e.dataTransfer.getData("text").split("_");
   let divId = data[0];
   let fromTowerId = data[1];
   let toTowerId = e.target.id;
 
-  if (e.target.classList.contains("tower") && dropAllowed(divId, fromTowerId, toTowerId)) {
+  if (e.target.classList.contains("tower") &&
+        dropAllowed(divId, getTowerById(fromTowerId), getTowerById(toTowerId))) {
     e.preventDefault();
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
-    moveBlock(parseInt(divId), fromTowerId, toTowerId);
-    resetDraggable();
-    e.dataTransfer.clearData();
+    moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
+    setDraggable();
     moveCount++;
+    updateMoveCount(moveCount);
+    e.dataTransfer.clearData();
+    if (checkForWin()) {
+      alert("you win");
+    };
   }
 });
 
@@ -146,39 +135,35 @@ gameBoardContents.addEventListener("dragover", e => {
 });
 
 function drag(e) {
-
-  console.log("drag e.target.id: ", e.target.id);
-  console.log(e);
   //set the data to the div's ID + current tower location (e.path[1].id) for future use
   e.dataTransfer.setData("text", `${e.target.id}_${e.path[1].id}`);
-  console.log(e.dataTransfer.getData("text"));
 }
 
 ///////////////// END DRAG-AND-DROP FUNCTIONS /////////////
 
-function dropAllowed(divId, fromTowerId, toTowerId) {
+function dropAllowed(divId, fromTower, toTower) {
   let dropAllowed = false;
-  let tower;
+  //let tower;
 
   //Determine which target tower we're working with
-  switch (toTowerId) {
-    case t1.id:
-      tower = t1;
-      break;
-    case t2.id:
-      tower = t2;
-      break;
-    case t3.id:
-      tower = t3;
-      break;
-  }
+  // switch (toTowerId) {
+  //   case t1.id:
+  //     tower = t1;
+  //     break;
+  //   case t2.id:
+  //     tower = t2;
+  //     break;
+  //   case t3.id:
+  //     tower = t3;
+  //     break;
+  // }
 
-  console.log("divId: ", divId, " fromTower: ", fromTowerId, " toTower: ", toTowerId);
+  //console.log("divId: ", divId, " fromTower: ", fromTowerId, " toTower: ", toTowerId);
 
-  if (tower.blocks === undefined || tower.blocks.length === 0) {
+  if (toTower.blocks === undefined || toTower.blocks.length === 0) {
     //No blocks in this tower: ok to drop!
     dropAllowed = true;
-  } else if (divId < tower.blocks[0].id) {
+  } else if (divId < toTower.blocks[0].id) {
     //Div being moved is of lower rank than the top block in this tower: ok to drop!
     dropAllowed = true;
   } else {
@@ -188,93 +173,72 @@ function dropAllowed(divId, fromTowerId, toTowerId) {
   return dropAllowed;
 }
 
-function moveBlock(blockId, fromTowerId, toTowerId) {
+function moveBlock(fromTower, toTower) {
   //removes a block from current tower and adds to the top of targetTower
-  let removedBlock = removeBlock(fromTowerId);
-  addBlock(removedBlock, toTowerId);
+  let removedBlock = removeBlock(fromTower);
+  addBlock(removedBlock, toTower);
 }
 
-function removeBlock(fromTowerId) {
-  //cycle through each tower and remove this block from whichever one it resides in
-  let removedBlock;
-  switch (fromTowerId) {
-    case "tower1":
-     console.log("tower1 remove");
-     removedBlock = t1.blocks.shift();
-     console.log(t1);
-     break;
-    case "tower2":
-      console.log("tower2 remove");
-      removedBlock = t2.blocks.shift();
-      console.log(t2);
-      break;
-    case "tower3":
-      console.log("tower3 remove");
-      removedBlock = t3.blocks.shift();
-      console.log(t3);
-      break;
-  }
-  return removedBlock;
+function removeBlock(fromTower) {
+  return fromTower.blocks.shift();
 }
 
 function addBlock(block, toTower) {
-  switch (toTower) {
+  toTower.blocks.unshift(block);
+}
+
+function setDraggable() {
+  //Iterate through each tower and set draggable to the top element of each
+  gameBoardContents.childNodes.forEach(t => {
+    t.childNodes.forEach(node => {
+      removeDraggable(node);
+    });
+    if (t.childElementCount > 0) {
+      addDraggable(t);
+    }
+  });
+}
+
+function removeDraggable(node) {
+  node.setAttribute("draggable", false);
+  node.classList.remove("draggable");
+  node.removeEventListener("dragstart", drag);
+}
+
+function addDraggable(tower) {
+  tower.firstChild.setAttribute("draggable", true);
+  tower.firstChild.classList.add("draggable");
+  tower.firstChild.addEventListener("dragstart", drag);
+}
+
+function updateMoveCount(newCount) {
+  mCount.innerText = newCount;
+}
+
+function getTowerById(id) {
+  let tower;
+  switch (id) {
     case "tower1":
-      console.log("tower1 add");
-      t1.blocks.unshift(block);
-      console.log(t1);
+      tower = t1;
       break;
     case "tower2":
-      console.log("tower2 add");
-      t2.blocks.unshift(block);
-      console.log(t2);
+      tower = t2;
       break;
     case "tower3":
-      console.log("tower3 add");
-      t3.blocks.unshift(block);
-      console.log(t3);
+      tower = t3;
       break;
   }
+  return tower;
 }
 
-function resetDraggable() {
-  //Iterate through each tower and set draggable to the top element of each
-  tower1.childNodes.forEach(node => {
-    node.setAttribute("draggable", false);
-    node.classList.remove("draggable");
-    node.removeEventListener("dragstart", drag);
-  });
-
-  if (tower1.childElementCount > 0) {
-    tower1.firstChild.setAttribute("draggable", true);
-    tower1.firstChild.classList.add("draggable");
-    tower1.firstChild.addEventListener("dragstart", drag);
+function checkForWin() {
+  if ((tower1.childElementCount === 0) && (tower2.childElementCount === 0)) {
+    return true;
+  } else {
+    return false;
   }
 
-  tower2.childNodes.forEach(node => {
-    node.setAttribute("draggable", false);
-    node.classList.remove("draggable");
-    node.removeEventListener("dragstart", drag);
-  });
-  if (tower2.childElementCount > 0) {
-    tower2.firstChild.setAttribute("draggable", true);
-    tower2.firstChild.classList.add("draggable");
-    tower2.firstChild.addEventListener("dragstart", drag);
-  }
-
-  tower3.childNodes.forEach(node => {
-    node.setAttribute("draggable", false);
-    node.classList.remove("draggable");
-    node.removeEventListener("dragstart", drag);
-  });
-
-  if (tower3.childElementCount > 0) {
-    tower3.firstChild.setAttribute("draggable", true);
-    tower3.firstChild.classList.add("draggable");
-    tower3.firstChild.addEventListener("dragstart", drag);
-  }
 }
-
 
 ///// MODAL FUNCTIONS /////////////////////////////////////////////////
 
