@@ -1,22 +1,22 @@
-const gameBoardContents = document.querySelector(".game-board-contents");
+const scrnGameBoardContents = document.querySelector(".game-board-contents");
 
-const tower1 = document.querySelector("#tower1");
-const tower2 = document.querySelector("#tower2");
-const tower3 = document.querySelector("#tower3");
+const scrnTower1 = document.querySelector("#tower1");
+const scrnTower2 = document.querySelector("#tower2");
+const scrnTower3 = document.querySelector("#tower3");
 
-const difficultySelect = document.querySelector("#difficulty");
-const resetBtn = document.querySelector("#reset-button");
-const solveMeBtn = document.querySelector("#solve-me-button");
+const scrnDifficultySelect = document.querySelector("#difficulty");
+const scrnResetBtn = document.querySelector("#reset-button");
+const scrnSolveMeBtn = document.querySelector("#solve-me-button");
 
-const rulesBtn = document.querySelector("#rules-button");
-const rulesModal = document.querySelector("#rules-modal");
-const rulesClose = document.querySelector("#close-rules");
+const scrnRulesBtn = document.querySelector("#rules-button");
+const scrnRulesModal = document.querySelector("#rules-modal");
+const scrnRulesCloseBtn = document.querySelector("#close-rules");
 
-const winModal = document.querySelector("#win-modal");
-const winClose = document.querySelector("#close-win");
+const scrnWinModal = document.querySelector("#win-modal");
+const scrnWinCloseBtn = document.querySelector("#close-win");
 
-const minMoveCount = document.querySelector("#min");
-const mCount = document.querySelector("#count");
+const scrnMinMoveCount = document.querySelector("#min");
+const scrnMoveCount = document.querySelector("#count");
 // const solveTime = document.querySelector("#time"); <-- possible future enhancement
 
 let moveCount = 0;
@@ -72,47 +72,45 @@ function initGame() {
   ////////////////////////////////////////////////////////////////////
 
   // Clear out the towers
-  tower1.innerHTML = "";
-  tower2.innerHTML = "";
-  tower3.innerHTML = "";
+  scrnTower1.innerHTML = "";
+  scrnTower2.innerHTML = "";
+  scrnTower3.innerHTML = "";
 
-  // difficultySelect will only be 'disabled' if the user clicks reset during an active game
+  // scrnDifficultySelect will only be 'disabled' if the user clicks reset during an active game
   // This
-  if (difficultySelect.classList.contains("disabled")) {
-    enableElement(difficultySelect);
+  if (scrnDifficultySelect.classList.contains("disabled")) {
+    enableElement(scrnDifficultySelect);
 
-    difficultySelect.value = 0;
-    resetBtn.innerText = "Start Game";
+    scrnDifficultySelect.value = 0;
+    scrnResetBtn.innerText = "Start Game";
 
     resetMoveCount();
-    updateInnerText(mCount, moveCount);
+    updateInnerText(scrnMoveCount, moveCount);
 
     resetMinMoveCount();
-    updateInnerText(minMoveCount, minMoves);
+    updateInnerText(scrnMinMoveCount, minMoves);
   }
 
-  if (!(difficultySelect.value === "0")) {
+  if (!(scrnDifficultySelect.value === "0")) {
     let blockArray = [];
     blockArray.push(new Block(1));
     blockArray.push(new Block(2));
-    for (let i = 3; i <= parseInt(difficultySelect.value); i++){
+    for (let i = 3; i <= parseInt(scrnDifficultySelect.value); i++){
       blockArray.push(new Block(i));
     }
 
-    t1 = new Tower(tower1.getAttribute("id"), blockArray);
-    t2 = new Tower(tower2.getAttribute("id"));
-    t3 = new Tower(tower3.getAttribute("id"));
+    t1 = new Tower(scrnTower1.getAttribute("id"), blockArray);
+    t2 = new Tower(scrnTower2.getAttribute("id"));
+    t3 = new Tower(scrnTower3.getAttribute("id"));
 
-    updateInnerText(minMoveCount, calcMinMoves(t1.blocks.length));
+    updateInnerText(scrnMinMoveCount, calcMinMoves(t1.blocks.length));
 
     resetMoveCount();
-    updateInnerText(mCount, moveCount);
+    updateInnerText(scrnMoveCount, moveCount);
 
-    updateInnerText(resetBtn, "Reset Game");
+    updateInnerText(scrnResetBtn, "Reset Game");
 
-    disableElement()
-    difficultySelect.setAttribute("disabled", true);
-    difficultySelect.classList.add("disabled");
+    disableElement(scrnDifficultySelect);
 
     let newBlock;
     for (let i = 0; i < t1.blocks.length; i++) {
@@ -120,17 +118,17 @@ function initGame() {
       newBlock.setAttribute("id", t1.blocks[i].id);
       newBlock.classList.add("block");
       newBlock.classList.add(`level${t1.blocks[i].id}`);
-      tower1.appendChild(newBlock);
-      tower1.firstChild.setAttribute("draggable", true);
-      tower1.firstChild.classList.add("draggable");
-      tower1.firstChild.addEventListener("dragstart", drag);
+      scrnTower1.appendChild(newBlock);
+      scrnTower1.firstChild.setAttribute("draggable", true);
+      scrnTower1.firstChild.classList.add("draggable");
+      scrnTower1.firstChild.addEventListener("dragstart", drag);
     }
   }
 }
 
 ///////////////// START DRAG-AND-DROP FUNCTIONS /////////////
 
-gameBoardContents.addEventListener("drop", e => {
+scrnGameBoardContents.addEventListener("drop", e => {
 
   // data[0] = id of the div, data[1] = id of the tower this div is moving from
   let data = e.dataTransfer.getData("text").split("_");
@@ -151,23 +149,23 @@ gameBoardContents.addEventListener("drop", e => {
     if (!(fromTowerId === toTowerId)) {
       incrementMoveCount(1);
       //updateMoveCountOnScreen(moveCount);
-      updateInnerText(mCount, moveCount);
+      updateInnerText(scrnMoveCount, moveCount);
     }
 
     e.dataTransfer.clearData();
     if (checkForWin()) {
-      tower3.childNodes[0].setAttribute("draggable", false);
-      tower3.childNodes[0].classList.remove("draggable");
-      showModal(winModal);
+      scrnTower3.childNodes[0].setAttribute("draggable", false);
+      scrnTower3.childNodes[0].classList.remove("draggable");
+      showModal(scrnWinModal);
     };
   }
 });
 
-gameBoardContents.addEventListener("dragend", e => {
+scrnGameBoardContents.addEventListener("dragend", e => {
   e.target.classList.remove("dragging");
 });
 
-gameBoardContents.addEventListener("dragenter", e=> {
+scrnGameBoardContents.addEventListener("dragenter", e=> {
   // data[0] = id of the div, data[1] = id of the tower this div is moving from
   let data = e.dataTransfer.getData("text").split("_");
   let divId = data[0];
@@ -181,14 +179,14 @@ gameBoardContents.addEventListener("dragenter", e=> {
   }
 });
 
-gameBoardContents.addEventListener("dragleave", e => {
+scrnGameBoardContents.addEventListener("dragleave", e => {
   if (e.target.classList.contains("drop-zone")) {
     e.target.classList.remove("valid-drop-zone");
     e.target.classList.remove("invalid-drop-zone");
   }
 });
 
-gameBoardContents.addEventListener("dragover", e => {
+scrnGameBoardContents.addEventListener("dragover", e => {
   e.preventDefault();
 });
 
@@ -249,7 +247,7 @@ function addBlock(block, toTower) {
 
 function setDraggable() {
   //Iterate through each tower and set draggable to the top element of each
-  gameBoardContents.childNodes.forEach(t => {
+  scrnGameBoardContents.childNodes.forEach(t => {
     t.childNodes.forEach(node => {
       removeDraggable(node);
     });
@@ -283,10 +281,6 @@ function resetMinMoveCount() {
   minMoves = 0;
 }
 
-// function updateMinMoveCountOnScreen(newCount) {
-//   minMoveCount.innerText = newCount;
-// }
-
 function updateInnerText(screenElement, text) {
   screenElement.innerText = text;
 }
@@ -308,7 +302,7 @@ function getTowerById(id) {
 }
 
 function checkForWin() {
-  if ((tower1.childElementCount === 0) && (tower2.childElementCount === 0)) {
+  if ((scrnTower1.childElementCount === 0) && (scrnTower2.childElementCount === 0)) {
     return true;
   } else {
     return false;
@@ -316,7 +310,7 @@ function checkForWin() {
 
 }
 
-resetBtn.addEventListener("click", e => {
+scrnResetBtn.addEventListener("click", e => {
   e.preventDefault();
   initGame();
 });
@@ -333,19 +327,19 @@ function disableElement(element) {
 
 ///// MODAL FUNCTIONS /////////////////////////////////////////////////
 
-rulesBtn.addEventListener("click", e => {
+scrnRulesBtn.addEventListener("click", e => {
   e.preventDefault();
-  showModal(rulesModal);
+  showModal(scrnRulesModal);
 });
 
-rulesClose.addEventListener("click", e => {
+scrnRulesCloseBtn.addEventListener("click", e => {
   e.preventDefault();
-  hideModal(rulesModal);
+  hideModal(scrnRulesModal);
 });
 
-winClose.addEventListener("click", e => {
+scrnWinCloseBtn.addEventListener("click", e => {
   e.preventDefault();
-  hideModal(winModal);
+  hideModal(scrnWinModal);
 });
 
 function showModal(modal) {
