@@ -36,11 +36,11 @@ class Block {
 class Tower {
   constructor(id, blocks = []) {
     this.id = id;
-    // Sort the blocks array in ascending order by level in
+    // Sort the blocks array in ascending order by id (aka level) in
     // case they were passed in out of order (this is only done in the constructor)
     if (blocks.length > 0) {
       blocks.sort((a, b) => {
-        return a.level - b.level;
+        return a.id - b.id;
       });
     }
     this.blocks = blocks;
@@ -92,10 +92,9 @@ function initGame() {
   }
 
   if (!(scrnDifficultySelect.value === "0")) {
+
     let blockArray = [];
-    blockArray.push(new Block(1));
-    blockArray.push(new Block(2));
-    for (let i = 3; i <= parseInt(scrnDifficultySelect.value); i++){
+    for (let i = 1; i <= parseInt(scrnDifficultySelect.value); i++){
       blockArray.push(new Block(i));
     }
 
@@ -109,16 +108,17 @@ function initGame() {
     updateInnerText(scrnMoveCount, moveCount);
 
     updateInnerText(scrnResetBtn, "Reset Game");
-
     disableElement(scrnDifficultySelect);
 
-    let newBlock;
+    let scrnNewBlock;
     for (let i = 0; i < t1.blocks.length; i++) {
-      newBlock = document.createElement("div");
-      newBlock.setAttribute("id", t1.blocks[i].id);
-      newBlock.classList.add("block");
-      newBlock.classList.add(`level${t1.blocks[i].id}`);
-      scrnTower1.appendChild(newBlock);
+      scrnNewBlock = document.createElement("div");
+      scrnNewBlock.setAttribute("id", t1.blocks[i].id);
+      scrnNewBlock.classList.add("block");
+
+      // The level class is used by the CSS to size the blocks correctly
+      scrnNewBlock.classList.add(`level${t1.blocks[i].id}`);
+      scrnTower1.appendChild(scrnNewBlock);
       scrnTower1.firstChild.setAttribute("draggable", true);
       scrnTower1.firstChild.classList.add("draggable");
       scrnTower1.firstChild.addEventListener("dragstart", drag);
@@ -126,7 +126,7 @@ function initGame() {
   }
 }
 
-///////////////// START DRAG-AND-DROP FUNCTIONS /////////////
+///////////////// START DRAG-AND-DROP EVENTS & HELPER FUNCTIONS /////////////
 
 scrnGameBoardContents.addEventListener("drop", e => {
 
@@ -139,23 +139,35 @@ scrnGameBoardContents.addEventListener("drop", e => {
   e.target.classList.remove("valid-drop-zone");
   e.target.classList.remove("invalid-drop-zone");
 
+  // If the target is a drop-zone and the drop is allowed (e.g. the id of the dragged block
+  // is less than the id of the top element in the target tower's block stack) then allow
+  // the drop and check to see if the win condition is met/
   if (e.target.classList.contains("drop-zone") &&
         dropAllowed(divId, getTowerById(toTowerId))) {
+
     e.preventDefault();
+
+    // Insert the dragged block at the top of the tower
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
+
+    // Move the block from the 'old' javascript tower object to the target tower object
     moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
+
+    // Reset the appropriate elements as draggable on all the towers
     setDraggable();
 
+    // Increment the move count if the user didn't drop the block back onto the old tower
     if (!(fromTowerId === toTowerId)) {
       incrementMoveCount(1);
-      //updateMoveCountOnScreen(moveCount);
       updateInnerText(scrnMoveCount, moveCount);
     }
 
     e.dataTransfer.clearData();
+
+    // Check for a win condition (all blocks are in tower 3)
     if (checkForWin()) {
-      scrnTower3.childNodes[0].setAttribute("draggable", false);
-      scrnTower3.childNodes[0].classList.remove("draggable");
+      //Turn off the ability to drag any objects (the game is over)
+      removeDraggable(scrnTower3.childNodes[0]);
       showModal(scrnWinModal);
     };
   }
