@@ -43,7 +43,7 @@
       <section class="game-stats-area">
         <div id="min-moves" class="stat">Min moves: <span id="min"></span></div>
         <div id="move-count" class="stat">Move count: <span id="count"></span></div>
-        <div id="time-to-solve" class="stat">3 sec / move: ~<span id="time"></span> minute(s)</div>
+        <!-- <div id="time-to-solve" class="stat">Approx. solve time: ~<span id="time"></span> minute(s)</div> -->
       </section>
       <section class="game-board-footer">
         <!-- <button id="reset" class="button">Reset Game</button> -->
@@ -54,10 +54,32 @@
     <div id="rules-modal-content" class="modal-content">
       <div id="rules-modal-title" class="modal-title">How to Play</div>
       <div id="rules-modal-msg" class="modal-msg">
-        Object: do the things really well...
+        <h1>Objective</h1>
+        <p>Move all blocks from the left-hand tower to the right-hand tower</p>
+        <h1>Rules</h1>
+        <ol>
+          <li>Only one block may be moved at a time</li>
+          <li>At no time can a larger block be placed on top of a smaller block</li>
+        </ol>
+        <h1>Gameplay</h1>
+          <ol>
+            <li>Select Difficulty</li>
+            <li>Click "Start Game"</li>
+          </ol>
       </div>
       <div id="rules-modal-footer" class="modal-footer">
         <button id="close-rules" class="button" href="#">Close</button>
+      </div>
+    </div>
+  </div>
+  <div id="win-modal" class="modal">
+    <div id="win-modal-content" class="modal-content">
+      <div id="win-modal-title" class="modal-title">Winner!</div>
+      <div id="win-modal-msg" class="modal-msg">
+        <h1 class="winner">Congratulations!</h1>
+      </div>
+      <div id="rules-modal-footer" class="modal-footer">
+        <button id="close-win" class="button" href="#">Close</button>
       </div>
     </div>
   </div>

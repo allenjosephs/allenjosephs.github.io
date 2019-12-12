@@ -1,5 +1,3 @@
-const rules = "The object of the game is to move all blocks from the left-hand tower to the right hand tower.  There are only two rules:<ul><li> Only one block may be moved at a time</li><li>At no time can a larger block be placed on top of a smaller block</li></ul>";
-
 const youWin = "Congrats on the big win!";
 
 const gameBoard = document.querySelector(".game-board");
@@ -22,9 +20,12 @@ const rulesModalMsg = document.querySelector("#rules-modal-msg");
 const rulesModalFooter = document.querySelector("#rules-modal-footer");
 const rulesClose = document.querySelector("#close-rules");
 
+const winModal = document.querySelector("#win-modal");
+const closeWin = document.querySelector("#close-win");
+
 const minMoveCount = document.querySelector("#min");
 const mCount = document.querySelector("#count");
-const solveTime = document.querySelector("#time");
+// const solveTime = document.querySelector("#time");
 
 let moveCount = 0;
 let minMoves = 0;
@@ -83,6 +84,10 @@ function initGame() {
     difficultySelect.removeAttribute("disabled");
     difficultySelect.value = 0;
     resetBtn.innerText = "Start Game";
+    moveCount = 0;
+    mCount.innerText = moveCount;
+    minMoveCount.innerText = 0;
+    // solveTime.innerText = 0;
   }
 
   if (!(difficultySelect.value === "0")) {
@@ -98,7 +103,7 @@ function initGame() {
     t3 = new Tower(tower3.getAttribute("id"));
 
     minMoveCount.innerText = calcMinMoves(t1.blocks.length);
-    solveTime.innerText = calcTimeToSolve(t1.blocks.length);
+    // solveTime.innerText = calcTimeToSolve(t1.blocks.length);
     moveCount = 0;
     mCount.innerText = moveCount;
     resetBtn.innerText = "Reset Game";
@@ -143,7 +148,7 @@ gameBoardContents.addEventListener("drop", e => {
     }
     e.dataTransfer.clearData();
     if (checkForWin()) {
-      showModal("You Win!", youWin);
+      showModal(winModal);
     };
   }
 });
@@ -301,6 +306,11 @@ rulesBtn.addEventListener("click", e => {
 rulesClose.addEventListener("click", e => {
   e.preventDefault();
   hideModal(rulesModal);
+});
+
+closeWin.addEventListener("click", e => {
+  e.preventDefault();
+  hideModal(winModal);
 });
 
 function showModal(modal) {

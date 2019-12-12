@@ -149,7 +149,7 @@ body {
   width: 90%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
   background-image: linear-gradient(
@@ -174,9 +174,9 @@ body {
   grid-column: 2;
 }
 
-#time-to-solve {
+/* #time-to-solve {
   grid-column: 3;
-}
+} */
 
 .game-controls-area {
   /* border: 1px solid red; */
@@ -339,28 +339,44 @@ body {
 .modal-content {
   background-color: rgba(0,0,0,0.95);
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 5fr 1fr;
   margin: 15vh;
   border: 1px solid white;
-  width: 25vw;
-  height: 50vh;
+  max-width: 35vw;
+  /* max-height: 50vh; */
 }
 
 .modal-title {
   display: flex;
   grid-row: 1;
-  font-size: 5em;
+  font-size: 3em;
   justify-content: center;
   align-items: center;
   /* border: 1px dashed greenyellow; */
+}
 
+h1 {
+  font-size: 1.5em;
+  color: yellow;
+  padding: 1em 0 0 0;
+  margin: 0;
+}
+
+h1.winner {
+  font-size: 3em;
+  justify-content: center;
+}
+
+ol {
+  padding-left: 1em;
+  /* list-style-type: none; */
 }
 
 .modal-msg {
   font-family: sans-serif;
   /* border: 1px dashed yellow; */
   display: flex;
-  font-size: 1em;
+  font-size: .9em;
   grid-row: 2;
   flex-direction: column;
   padding: 5% 5% 0 5%;
