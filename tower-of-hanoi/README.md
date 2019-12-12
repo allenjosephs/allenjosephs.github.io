@@ -18,7 +18,7 @@ Joe Allen
 
 ## Unique Features
 
-1. CSS Reset
+1. CSS Normalization
 2. Fun with gradients to style the blocks!
 3. Responsive design
 4. Drag-and-drop interface
