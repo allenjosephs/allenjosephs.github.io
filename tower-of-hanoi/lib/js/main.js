@@ -4,23 +4,20 @@ const tower1 = document.querySelector("#tower1");
 const tower2 = document.querySelector("#tower2");
 const tower3 = document.querySelector("#tower3");
 
+const difficultySelect = document.querySelector("#difficulty");
 const resetBtn = document.querySelector("#reset-button");
 const solveMeBtn = document.querySelector("#solve-me-button");
-const difficultySelect = document.querySelector("#difficulty");
 
 const rulesBtn = document.querySelector("#rules-button");
-
 const rulesModal = document.querySelector("#rules-modal");
-const rulesModalMsg = document.querySelector("#rules-modal-msg");
-const rulesModalFooter = document.querySelector("#rules-modal-footer");
 const rulesClose = document.querySelector("#close-rules");
 
 const winModal = document.querySelector("#win-modal");
-const closeWin = document.querySelector("#close-win");
+const winClose = document.querySelector("#close-win");
 
 const minMoveCount = document.querySelector("#min");
 const mCount = document.querySelector("#count");
-// const solveTime = document.querySelector("#time");
+// const solveTime = document.querySelector("#time"); <-- possible future enhancement
 
 let moveCount = 0;
 let minMoves = 0;
@@ -32,14 +29,15 @@ let draggedBlock;
 
 class Block {
   constructor(id) {
-    this.id = id
+    this.id = id;
   }
 }
 
 class Tower {
   constructor(id, blocks = []) {
     this.id = id;
-    // Sort the blocks array in ascending order by level
+    // Sort the blocks array in ascending order by level in
+    // case they were passed in out of order (this is only done in the constructor)
     if (blocks.length > 0) {
       blocks.sort((a, b) => {
         return a.level - b.level;
@@ -60,6 +58,7 @@ class Tower {
 
 }
 
+// Global variables for the 3 towers
 let t1;
 let t2;
 let t3;
@@ -67,23 +66,29 @@ let t3;
 initGame();
 
 function initGame() {
+  ////////////////////////////////////////////////////////////////////
+  // This function runs when the page is first loaded and when the  //
+  // user clicks the reset button.                                  //
+  ////////////////////////////////////////////////////////////////////
 
+  // Clear out the towers
   tower1.innerHTML = "";
   tower2.innerHTML = "";
   tower3.innerHTML = "";
 
-  // difficultySelect will be 'disabled' if the user clicks reset during an active game
-  // This will enable the difficulty selector if the user
-  // reset the game in the middle of playing
+  // difficultySelect will only be 'disabled' if the user clicks reset during an active game
+  // This
   if (difficultySelect.classList.contains("disabled")) {
-    difficultySelect.classList.remove("disabled");
-    difficultySelect.removeAttribute("disabled");
+    enableElement(difficultySelect);
+
     difficultySelect.value = 0;
     resetBtn.innerText = "Start Game";
-    moveCount = 0;
-    mCount.innerText = moveCount;
-    minMoveCount.innerText = 0;
-    // solveTime.innerText = 0;
+
+    resetMoveCount();
+    updateInnerText(mCount, moveCount);
+
+    resetMinMoveCount();
+    updateInnerText(minMoveCount, minMoves);
   }
 
   if (!(difficultySelect.value === "0")) {
@@ -98,11 +103,14 @@ function initGame() {
     t2 = new Tower(tower2.getAttribute("id"));
     t3 = new Tower(tower3.getAttribute("id"));
 
-    minMoveCount.innerText = calcMinMoves(t1.blocks.length);
-    // solveTime.innerText = calcTimeToSolve(t1.blocks.length);
-    moveCount = 0;
-    mCount.innerText = moveCount;
-    resetBtn.innerText = "Reset Game";
+    updateInnerText(minMoveCount, calcMinMoves(t1.blocks.length));
+
+    resetMoveCount();
+    updateInnerText(mCount, moveCount);
+
+    updateInnerText(resetBtn, "Reset Game");
+
+    disableElement()
     difficultySelect.setAttribute("disabled", true);
     difficultySelect.classList.add("disabled");
 
@@ -139,9 +147,13 @@ gameBoardContents.addEventListener("drop", e => {
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
     moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
     setDraggable();
+
     if (!(fromTowerId === toTowerId)) {
-      updateMoveCount();
+      incrementMoveCount(1);
+      //updateMoveCountOnScreen(moveCount);
+      updateInnerText(mCount, moveCount);
     }
+
     e.dataTransfer.clearData();
     if (checkForWin()) {
       tower3.childNodes[0].setAttribute("draggable", false);
@@ -259,9 +271,24 @@ function addDraggable(tower) {
   tower.firstChild.addEventListener("dragstart", drag);
 }
 
-function updateMoveCount() {
-  moveCount++;
-  mCount.innerText = moveCount;
+function incrementMoveCount(increment) {
+  moveCount += increment;
+}
+
+function resetMoveCount() {
+  moveCount = 0;
+}
+
+function resetMinMoveCount() {
+  minMoves = 0;
+}
+
+// function updateMinMoveCountOnScreen(newCount) {
+//   minMoveCount.innerText = newCount;
+// }
+
+function updateInnerText(screenElement, text) {
+  screenElement.innerText = text;
 }
 
 function getTowerById(id) {
@@ -294,6 +321,16 @@ resetBtn.addEventListener("click", e => {
   initGame();
 });
 
+function enableElement(element) {
+  element.classList.remove("disabled");
+  element.removeAttribute("disabled");
+}
+
+function disableElement(element) {
+  element.classList.add("disabled");
+  element.setAttribute("disabled", true);
+}
+
 ///// MODAL FUNCTIONS /////////////////////////////////////////////////
 
 rulesBtn.addEventListener("click", e => {
@@ -306,7 +343,7 @@ rulesClose.addEventListener("click", e => {
   hideModal(rulesModal);
 });
 
-closeWin.addEventListener("click", e => {
+winClose.addEventListener("click", e => {
   e.preventDefault();
   hideModal(winModal);
 });
