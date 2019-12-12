@@ -73,6 +73,8 @@ initGame();
 
 function initGame() {
 
+  showModal(winModal);
+
   tower1.innerHTML = "";
   tower2.innerHTML = "";
   tower3.innerHTML = "";
@@ -148,6 +150,8 @@ gameBoardContents.addEventListener("drop", e => {
     }
     e.dataTransfer.clearData();
     if (checkForWin()) {
+      tower3.childNodes[0].setAttribute("draggable", false);
+      tower3.childNodes[0].classList.remove("draggable");
       showModal(winModal);
     };
   }

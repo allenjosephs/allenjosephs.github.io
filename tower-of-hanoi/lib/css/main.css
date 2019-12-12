@@ -17,7 +17,6 @@ body {
   background: black;
   color: rgb(233, 227, 227);
   font-family: 'Amatic SC', cursive, sans-serif;
-  /* font-size: 1em; */
 }
 
 .play-area {
@@ -58,22 +57,18 @@ body {
 }
 
 .game-board-area {
-  /* border: 1px dashed red; */
   grid-row: 2;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* height: 100%; */
 }
 
 .game-board {
   /*This class is mainly to define a container which has a fixed aspect ratio */
-  /* border: 1px solid red; */
   /* aspect ratio settings */
   position: relative;
   width: 90%;
-  /* height: 90%; */
   padding-top: 30%;
 }
 
@@ -87,7 +82,6 @@ body {
   bottom: 0;
   right: 0;
   width: 100%;
-  /* height: 100%; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 1px;
@@ -99,7 +93,6 @@ body {
   justify-content: flex-end;
   align-items: center;
   background-color: rgb(37, 37, 37);
-  /* height: 1fr; */
   width: 1fr;
   margin: 20px;
   transition: all .25s ease;
@@ -143,7 +136,6 @@ body {
 /* ///////////// END DRAG AND DROP STYLES //////////////*/
 
 .game-stats-area {
-  /* border: 1px solid blue; */
   color: black;
   grid-row: 3;
   width: 90%;
@@ -179,7 +171,6 @@ body {
 } */
 
 .game-controls-area {
-  /* border: 1px solid red; */
   grid-row: 4;
   width: 90%;
   height: 100%;
@@ -187,18 +178,7 @@ body {
   grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
-  /* background-image: linear-gradient(
-    to right,
-    greenyellow 15%,
-    yellow,
-    greenyellow 85%); */
-  /* border: 3px solid grey; */
-  /* border-radius: 5px; */
-  /* justify-content: space-evenly;
-  align-items: center;
-  width: 90%; */
   margin-top: 1%;
-  /* height: 100%; */
 }
 
 .difficulty {
@@ -206,13 +186,10 @@ body {
   letter-spacing: .25rem;
   color: rgb(190, 190, 190);
   font-size: 2em;
-  /* height: 90%;
-  width: 90%; */
   font-weight: 900;
   background-color: rgb(37, 30, 30);
   border-radius: 10px;
   transition: all .25s ease;
-  /* justify-content: right; */
 }
 
 .disabled {
@@ -221,7 +198,6 @@ body {
 
 #reset-button {
   grid-column: 2;
-  /* justify-content: left; */
 }
 
 /* #solve-me-button {
@@ -233,26 +209,36 @@ body {
   display:flex;
   justify-content: center;
   align-items: center;
-  /* border: 1px dashed red; */
 }
 
 .block {
-  transition: all .2s;
+  transition: background .5s;
   border-width: 1px 2px;
   border-style: solid;
   border-color: black;
-  /* background-color: rgb(33, 129, 21); */
-  background-image: linear-gradient(
-    to right,
-    rgb(23, 87, 15),
-    rgb(33, 129, 21) 10%,
-    rgb(109, 155, 103) 35%,
-    rgb(125, 158, 119) 50%,
-    rgb(109, 155, 103) 65%,
-    rgb(33, 129, 21) 90%,
-    rgb(23, 87, 15));
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1),
+      rgba(33, 129, 21, 1) 10%,
+      rgba(109, 155, 103, 0) 40%,
+      rgba(125, 158, 119, .1) 50%,
+      rgba(109, 155, 103, 0) 60%,
+      rgba(33, 129, 21, 1) 90%,
+      rgba(0, 0, 0, 1)),
+
+    linear-gradient(
+      to right,
+      rgba(23, 87, 15, 1),
+      rgba(33, 129, 21, 1) 10%,
+      rgba(109, 155, 103, 1) 40%,
+      rgba(125, 158, 119, 1) 50%,
+      rgba(109, 155, 103, 1) 60%,
+      rgba(33, 129, 21, 1) 90%,
+      rgba(23, 87, 15, 1));
+
   height: 7%;
-  border-radius: 30% 30% 0 0;;
+  border-radius: 25px/5px;
 
 }
 
@@ -260,7 +246,6 @@ body {
   cursor: move;
   border: 3px dotted black;
   background: rgb(201, 198, 44);
-  /* box-shadow: 3px 3px 20px 10px rgba(31, 28, 75, 0.336), -3px -3px 20px 10px rgba(31, 28, 75, 0.336); */
 }
 
 .block:hover:not(.draggable) {
@@ -335,7 +320,6 @@ body {
   display: none;
   justify-content: center;
   align-items: flex-start;
-  /* border: 1px solid red; */
 }
 
 .modal-content {
@@ -344,7 +328,6 @@ body {
   grid-template-rows: 1fr 5fr 1fr;
   margin: 15vh;
   border: 1px solid white;
-  max-width: 35vw;
   /* max-height: 50vh; */
 }
 
@@ -354,41 +337,35 @@ body {
   font-size: 3em;
   justify-content: center;
   align-items: center;
-  /* border: 1px dashed greenyellow; */
+}
+
+.modal-msg {
+  border: 1px solid red;
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  font-size: .9em;
+  grid-row: 2;
+  padding: 5%;
+  justify-content: center;
+
 }
 
 h1 {
   font-size: 1.5em;
   color: yellow;
-  padding: 1em 0 0 0;
-  margin: 0;
 }
 
 h1.winner {
   font-size: 3em;
-  justify-content: center;
+  border: 1px dashed green;
 }
 
 ol {
   padding-left: 1em;
-  /* list-style-type: none; */
-}
-
-.modal-msg {
-  font-family: sans-serif;
-  /* border: 1px dashed yellow; */
-  display: flex;
-  font-size: .9em;
-  grid-row: 2;
-  flex-direction: column;
-  padding: 5% 5% 0 5%;
-	/* background-color: rgba(46, 45, 45, 0.95); */
-  border-radius: 10px;
-
 }
 
 .modal-footer {
-  /* border: 1px dashed blue; */
   display: flex;
   grid-row: 3;
   justify-content: center;
