@@ -174,17 +174,17 @@ scrnGameBoardContents.addEventListener("drop", e => {
 });
 
 scrnGameBoardContents.addEventListener("dragend", e => {
+  // Remove the visual 'I am being dragged' styling once the drag is over
   e.target.classList.remove("dragging");
 });
 
 scrnGameBoardContents.addEventListener("dragenter", e=> {
-  // data[0] = id of the div, data[1] = id of the tower this div is moving from
-  let data = e.dataTransfer.getData("text").split("_");
-  let divId = data[0];
+  // This event listener will add some styling to the tower being dragged into based
+  // on whether the tower is a valid drop zone for the dragged block
   let toTowerId = e.target.id;
-
   if (e.target.classList.contains("drop-zone")) {
-    if (dropAllowed(parseInt(draggedBlock.id), getTowerById(toTowerId))) {      e.target.classList.add("valid-drop-zone");
+    if (dropAllowed(parseInt(draggedBlock.id), getTowerById(toTowerId))) {
+      e.target.classList.add("valid-drop-zone");
     } else {
       e.target.classList.add("invalid-drop-zone");
     }
@@ -192,6 +192,7 @@ scrnGameBoardContents.addEventListener("dragenter", e=> {
 });
 
 scrnGameBoardContents.addEventListener("dragleave", e => {
+  // Reset the tower's styling once the cursor leaves the drop zone
   if (e.target.classList.contains("drop-zone")) {
     e.target.classList.remove("valid-drop-zone");
     e.target.classList.remove("invalid-drop-zone");
@@ -204,7 +205,6 @@ scrnGameBoardContents.addEventListener("dragover", e => {
 
 function drag(e) {
   //set the data to the div's ID + current tower location (e.path[1].id) for future use
-
   //certain drag events do not have access to the object being dragged.
   //thus, storing the dragged object into a global variable
   draggedBlock = document.getElementById(e.target.id);
