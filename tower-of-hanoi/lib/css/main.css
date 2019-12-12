@@ -184,7 +184,7 @@ body {
   width: 90%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
   /* background-image: linear-gradient(
@@ -212,6 +212,7 @@ body {
   background-color: rgb(37, 30, 30);
   border-radius: 10px;
   transition: all .25s ease;
+  /* justify-content: right; */
 }
 
 .disabled {
@@ -220,11 +221,12 @@ body {
 
 #reset-button {
   grid-column: 2;
+  /* justify-content: left; */
 }
 
-#solve-me-button {
+/* #solve-me-button {
   grid-column: 3;
-}
+} */
 
 .game-board-footer {
   grid-row: 5;
