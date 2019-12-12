@@ -1,6 +1,3 @@
-const youWin = "Congrats on the big win!";
-
-const gameBoard = document.querySelector(".game-board");
 const gameBoardContents = document.querySelector(".game-board-contents");
 
 const tower1 = document.querySelector("#tower1");
@@ -14,8 +11,6 @@ const difficultySelect = document.querySelector("#difficulty");
 const rulesBtn = document.querySelector("#rules-button");
 
 const rulesModal = document.querySelector("#rules-modal");
-const rulesModalContent = document.querySelector("#rules-modal-content");
-const rulesModalTitle = document.querySelector("#rules-modal-title");
 const rulesModalMsg = document.querySelector("#rules-modal-msg");
 const rulesModalFooter = document.querySelector("#rules-modal-footer");
 const rulesClose = document.querySelector("#close-rules");
@@ -73,12 +68,11 @@ initGame();
 
 function initGame() {
 
-  showModal(winModal);
-
   tower1.innerHTML = "";
   tower2.innerHTML = "";
   tower3.innerHTML = "";
 
+  // difficultySelect will be 'disabled' if the user clicks reset during an active game
   // This will enable the difficulty selector if the user
   // reset the game in the middle of playing
   if (difficultySelect.classList.contains("disabled")) {

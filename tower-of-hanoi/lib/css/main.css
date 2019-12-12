@@ -328,7 +328,6 @@ body {
   grid-template-rows: 1fr 5fr 1fr;
   margin: 15vh;
   border: 1px solid white;
-  /* max-height: 50vh; */
 }
 
 .modal-title {
@@ -340,15 +339,13 @@ body {
 }
 
 .modal-msg {
-  border: 1px solid red;
   font-family: 'Open Sans', sans-serif;
   display: flex;
   flex-direction: column;
   font-size: .9em;
   grid-row: 2;
-  padding: 5%;
+  /* padding: 5%; */
   justify-content: center;
-
 }
 
 h1 {
@@ -358,7 +355,6 @@ h1 {
 
 h1.winner {
   font-size: 3em;
-  border: 1px dashed green;
 }
 
 ol {
@@ -376,11 +372,11 @@ ol {
   display: flex;
 }
 
-@media screen and (min-width: 800px) {
+/* @media screen and (min-width: 800px) {
   html {
     font-size: 1vw;
   }
-}
+} */
 
 /* @media all and (max-width: 900px), (max-height: 800px) {
   .header-area {
