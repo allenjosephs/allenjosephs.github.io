@@ -24,5 +24,5 @@ Joe Allen
 4. Drag-and-drop interface
 5. Aspect-ratio is maintained on the game board no matter the screen size
 6. Styling features:
-  1. Dragged blocks are dimmed in their original position while being dragged
-  2. Potential drop zones are highlighted green or red depending on eligibility
+    1. Dragged blocks are dimmed in their original position while being dragged
+    2. Potential drop zones are highlighted green or red depending on eligibility
