@@ -5,6 +5,8 @@ const scrnTower2 = document.querySelector("#tower2");
 const scrnTower3 = document.querySelector("#tower3");
 
 const scrnDifficultySelect = document.querySelector("#difficulty");
+const scrnDifficultyDiv = document.querySelector(".difficulty");
+
 const scrnResetBtn = document.querySelector("#reset-button");
 const scrnSolveMeBtn = document.querySelector("#solve-me-button");
 
@@ -25,7 +27,7 @@ let timeToSolve = 0;
 
 // This will hold the object being dragged (a block).  In many cases drag
 // events do not have access to the object being dragged; this is my workaround.
-let draggedBlock;
+let scrnDraggedBlock;
 
 class Block {
   constructor(id) {
@@ -77,9 +79,9 @@ function initGame() {
   scrnTower3.innerHTML = "";
 
   // scrnDifficultySelect will only be 'disabled' if the user clicks reset during an active game
-  // This
   if (scrnDifficultySelect.classList.contains("disabled")) {
     enableElement(scrnDifficultySelect);
+    enableElement(scrnDifficultyDiv);
 
     scrnDifficultySelect.value = 0;
     scrnResetBtn.innerText = "Start Game";
@@ -109,6 +111,7 @@ function initGame() {
 
     updateInnerText(scrnResetBtn, "Reset Game");
     disableElement(scrnDifficultySelect);
+    disableElement(scrnDifficultyDiv);
 
     let scrnNewBlock;
     for (let i = 0; i < t1.blocks.length; i++) {
@@ -130,10 +133,8 @@ function initGame() {
 
 scrnGameBoardContents.addEventListener("drop", e => {
 
-  // data[0] = id of the div, data[1] = id of the tower this div is moving from
-  let data = e.dataTransfer.getData("text").split("_");
-  let divId = data[0];
-  let fromTowerId = data[1];
+  let divId = scrnDraggedBlock.id;
+  let fromTowerId = e.dataTransfer.getData("text");
   let toTowerId = e.target.id;
 
   e.target.classList.remove("valid-drop-zone");
@@ -153,10 +154,10 @@ scrnGameBoardContents.addEventListener("drop", e => {
     // Move the block from the 'old' javascript tower object to the target tower object
     moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
 
-    // Reset the appropriate elements as draggable on all the towers
+    // Reset the appropriate elements as draggable on all of the towers
     setDraggable();
 
-    // Increment the move count if the user didn't drop the block back onto the old tower
+    // Increment the move count if the user didn't drop the block back onto the original tower
     if (!(fromTowerId === toTowerId)) {
       incrementMoveCount(1);
       updateInnerText(scrnMoveCount, moveCount);
@@ -183,7 +184,7 @@ scrnGameBoardContents.addEventListener("dragenter", e=> {
   // on whether the tower is a valid drop zone for the dragged block
   let toTowerId = e.target.id;
   if (e.target.classList.contains("drop-zone")) {
-    if (dropAllowed(parseInt(draggedBlock.id), getTowerById(toTowerId))) {
+    if (dropAllowed(parseInt(scrnDraggedBlock.id), getTowerById(toTowerId))) {
       e.target.classList.add("valid-drop-zone");
     } else {
       e.target.classList.add("invalid-drop-zone");
@@ -204,15 +205,13 @@ scrnGameBoardContents.addEventListener("dragover", e => {
 });
 
 function drag(e) {
-  //set the data to the div's ID + current tower location (e.path[1].id) for future use
-  //certain drag events do not have access to the object being dragged.
-  //thus, storing the dragged object into a global variable
-  draggedBlock = document.getElementById(e.target.id);
-  e.dataTransfer.setData("text", `${e.target.id}_${e.path[1].id}`);
+  // Set the data to the current tower location (e.path[1].id) for future use.
+  // Certain drag events do not have access to the object being dragged,
+  // thus storing the dragged object into a global variable
+  scrnDraggedBlock = document.getElementById(e.target.id);
+  e.dataTransfer.setData("text", e.path[1].id);
   e.target.classList.add("dragging");
 }
-
-///////////////// END DRAG-AND-DROP FUNCTIONS /////////////
 
 function dropAllowed(divId, toTower) {
   let dropAllowed = false;
@@ -234,6 +233,14 @@ function dropAllowed(divId, toTower) {
   }
   return dropAllowed;
 }
+
+///////////////// END DRAG-AND-DROP LISTENERS & HELPERS /////////////
+
+document.getElementById("difficulty").addEventListener("onkeypress", e => {
+  // This prevents users from typing in the block count input
+  // which will force them to use the spinners
+  e.preventDefault();
+});
 
 function calcTimeToSolve(blockCount) {
   return Math.ceil(calcMinMoves(blockCount) * 3 / 60);

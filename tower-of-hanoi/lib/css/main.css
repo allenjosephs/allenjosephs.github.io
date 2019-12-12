@@ -93,7 +93,6 @@ body {
   justify-content: flex-end;
   align-items: center;
   background-color: rgb(37, 37, 37);
-  width: 1fr;
   margin: 20px;
   transition: all .25s ease;
   background-color: aqua;
@@ -175,21 +174,38 @@ body {
   width: 90%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   justify-items: center;
   align-items: center;
   margin-top: 1%;
 }
+
 
 .difficulty {
   grid-column: 1;
   letter-spacing: .25rem;
   color: rgb(190, 190, 190);
   font-size: 2em;
+  align-content: center;
   font-weight: 900;
   background-color: rgb(37, 30, 30);
   border-radius: 10px;
   transition: all .25s ease;
+  min-width: 14%;
+  text-align: center;
+}
+
+input[type='number'] {
+  color: white;
+  background-color: rgb(37, 30, 30);
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Always display arrows in the number of blocks input */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    opacity: 1;
 }
 
 .disabled {
@@ -197,7 +213,7 @@ body {
 }
 
 #reset-button {
-  grid-column: 2;
+  grid-column: 1;
 }
 
 /* #solve-me-button {
@@ -213,7 +229,7 @@ body {
 
 .block {
   transition: background .5s;
-  border-width: 1px 2px;
+  border-width: 1px;
   border-style: solid;
   border-color: black;
   background-image:
