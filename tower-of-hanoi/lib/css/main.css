@@ -6,7 +6,7 @@ html {
     Tips from "Getting started with fluid typography: https://www.smashingmagazine.com/2016/05/fluid-typography/
   */
   /* font-size: 1vw; */
-  font-size: calc(3px + .75vw);
+  font-size: calc(.75vw);
 }
 
 body {
@@ -104,6 +104,8 @@ body {
   margin: 20px;
   transition: all .25s ease;
   background-color: aqua;
+  border: 3px solid grey;
+  border-radius: 5px;
 
 }
 
@@ -119,6 +121,8 @@ body {
   grid-column: 3;
 }
 
+
+/* ///////////// START DRAG AND DROP STYLES //////////////*/
 .dragging {
   opacity: .5;
 }
@@ -136,6 +140,7 @@ body {
   background-color: rgb(253, 234, 234);
   border: 5px solid red;
 }
+/* ///////////// END DRAG AND DROP STYLES //////////////*/
 
 .game-stats-area {
   /* border: 1px solid blue; */
@@ -147,7 +152,13 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
   align-items: center;
-  background-image: linear-gradient(to right, greenyellow, yellow, greenyellow);
+  background-image: linear-gradient(
+    to right,
+    greenyellow 15%,
+    yellow,
+    greenyellow 85%);
+  border: 3px solid grey;
+  border-radius: 5px;
 }
 
 .stat {
@@ -170,12 +181,49 @@ body {
 .game-controls-area {
   /* border: 1px solid red; */
   grid-row: 4;
-  display:flex;
-  justify-content: space-evenly;
-  align-items: center;
   width: 90%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  /* background-image: linear-gradient(
+    to right,
+    greenyellow 15%,
+    yellow,
+    greenyellow 85%); */
+  /* border: 3px solid grey; */
+  /* border-radius: 5px; */
+  /* justify-content: space-evenly;
+  align-items: center;
+  width: 90%; */
   margin-top: 1%;
   /* height: 100%; */
+}
+
+.difficulty {
+  grid-column: 1;
+  letter-spacing: .25rem;
+  color: rgb(190, 190, 190);
+  font-size: 2em;
+  /* height: 90%;
+  width: 90%; */
+  font-weight: 900;
+  background-color: rgb(37, 30, 30);
+  border-radius: 10px;
+  transition: all .25s ease;
+}
+
+.disabled {
+  opacity: .5;
+}
+
+#reset-button {
+  grid-column: 2;
+}
+
+#solve-me-button {
+  grid-column: 3;
 }
 
 .game-board-footer {
@@ -273,7 +321,7 @@ body {
   cursor: pointer;
 }
 
-#modal {
+.modal {
   background-color: rgba(0,0,0,0.75);
 	position: fixed;
 	top: 0;
@@ -288,7 +336,7 @@ body {
   /* border: 1px solid red; */
 }
 
-#modal-content {
+.modal-content {
   background-color: rgba(0,0,0,0.95);
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
@@ -298,7 +346,7 @@ body {
   height: 50vh;
 }
 
-#modal-title {
+.modal-title {
   display: flex;
   grid-row: 1;
   font-size: 5em;
@@ -308,7 +356,7 @@ body {
 
 }
 
-#modal-msg {
+.modal-msg {
   font-family: sans-serif;
   /* border: 1px dashed yellow; */
   display: flex;
@@ -321,12 +369,16 @@ body {
 
 }
 
-#modal-footer {
+.modal-footer {
   /* border: 1px dashed blue; */
   display: flex;
   grid-row: 3;
   justify-content: center;
   align-items: center;
+}
+
+.modal-show {
+  display: flex;
 }
 
 @media screen and (min-width: 800px) {

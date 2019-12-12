@@ -11,14 +11,15 @@ const tower3 = document.querySelector("#tower3");
 
 const resetBtn = document.querySelector("#reset-button");
 const solveMeBtn = document.querySelector("#solve-me-button");
+const difficultySelect = document.querySelector("#difficulty");
+
 const rulesBtn = document.querySelector("#rules-button");
 
-const modal = document.querySelector("#modal");
-const modalContent = document.querySelector("#modal-content");
-const modalTitle = document.querySelector("#modal-title");
-const modalMsg = document.querySelector("#modal-msg");
-const modalFooter = document.querySelector("#modal-footer");
-
+const rulesModal = document.querySelector("#rules-modal");
+const rulesModalContent = document.querySelector("#rules-modal-content");
+const rulesModalTitle = document.querySelector("#rules-modal-title");
+const rulesModalMsg = document.querySelector("#rules-modal-msg");
+const rulesModalFooter = document.querySelector("#rules-modal-footer");
 const rulesClose = document.querySelector("#close-rules");
 
 const minMoveCount = document.querySelector("#min");
@@ -75,38 +76,47 @@ function initGame() {
   tower2.innerHTML = "";
   tower3.innerHTML = "";
 
-  t1 = new Tower(tower1.getAttribute("id"),
-  [new Block(1),
-      new Block(2),
-      new Block(3)
-      // new Block(4),
-      // new Block(5),
-      // new Block(6),
-      // new Block(7),
-      // new Block(8),
-      // new Block(9),
-      // new Block(10)
-    ]);
-  t2 = new Tower(tower2.getAttribute("id"));
-  t3 = new Tower(tower3.getAttribute("id"));
-
-  minMoveCount.innerText = calcMinMoves(t1.blocks.length);
-  solveTime.innerText = calcTimeToSolve(t1.blocks.length);
-  moveCount = 0;
-  mCount.innerText = moveCount;
-
-  let newBlock;
-  for (let i = 0; i < t1.blocks.length; i++) {
-    newBlock = document.createElement("div");
-    newBlock.setAttribute("id", t1.blocks[i].id);
-    newBlock.classList.add("block");
-    newBlock.classList.add(`level${t1.blocks[i].id}`);
-    tower1.appendChild(newBlock);
-    tower1.firstChild.setAttribute("draggable", true);
-    tower1.firstChild.classList.add("draggable");
-    tower1.firstChild.addEventListener("dragstart", drag);
+  // This will enable the difficulty selector if the user
+  // reset the game in the middle of playing
+  if (difficultySelect.classList.contains("disabled")) {
+    difficultySelect.classList.remove("disabled");
+    difficultySelect.removeAttribute("disabled");
+    difficultySelect.value = 0;
+    resetBtn.innerText = "Start Game";
   }
 
+  if (!(difficultySelect.value === "0")) {
+    let blockArray = [];
+    blockArray.push(new Block(1));
+    blockArray.push(new Block(2));
+    for (let i = 3; i <= parseInt(difficultySelect.value); i++){
+      blockArray.push(new Block(i));
+    }
+
+    t1 = new Tower(tower1.getAttribute("id"), blockArray);
+    t2 = new Tower(tower2.getAttribute("id"));
+    t3 = new Tower(tower3.getAttribute("id"));
+
+    minMoveCount.innerText = calcMinMoves(t1.blocks.length);
+    solveTime.innerText = calcTimeToSolve(t1.blocks.length);
+    moveCount = 0;
+    mCount.innerText = moveCount;
+    resetBtn.innerText = "Reset Game";
+    difficultySelect.setAttribute("disabled", true);
+    difficultySelect.classList.add("disabled");
+
+    let newBlock;
+    for (let i = 0; i < t1.blocks.length; i++) {
+      newBlock = document.createElement("div");
+      newBlock.setAttribute("id", t1.blocks[i].id);
+      newBlock.classList.add("block");
+      newBlock.classList.add(`level${t1.blocks[i].id}`);
+      tower1.appendChild(newBlock);
+      tower1.firstChild.setAttribute("draggable", true);
+      tower1.firstChild.classList.add("draggable");
+      tower1.firstChild.addEventListener("dragstart", drag);
+    }
+  }
 }
 
 ///////////////// START DRAG-AND-DROP FUNCTIONS /////////////
@@ -128,7 +138,9 @@ gameBoardContents.addEventListener("drop", e => {
     e.target.insertBefore(document.getElementById(divId), e.target.firstChild);
     moveBlock(getTowerById(fromTowerId), getTowerById(toTowerId));
     setDraggable();
-    updateMoveCount();
+    if (!(fromTowerId === toTowerId)) {
+      updateMoveCount();
+    }
     e.dataTransfer.clearData();
     if (checkForWin()) {
       showModal("You Win!", youWin);
@@ -274,27 +286,29 @@ function checkForWin() {
 
 }
 
-///// MODAL FUNCTIONS /////////////////////////////////////////////////
-
-rulesBtn.addEventListener("click", e => {
-  e.preventDefault();
-  showModal("How to Play", rules);
-});
-
-rulesClose.addEventListener("click", e => {
-  e.preventDefault();
-  document.querySelector("#modal").style.display = 'none';
-});
-
 resetBtn.addEventListener("click", e => {
   e.preventDefault();
   initGame();
 });
 
-function showModal(title, msg) {
-  modalTitle.innerHTML = title;
-  modalMsg.innerHTML = msg;
-  modal.style.display = 'flex';
+///// MODAL FUNCTIONS /////////////////////////////////////////////////
+
+rulesBtn.addEventListener("click", e => {
+  e.preventDefault();
+  showModal(rulesModal);
+});
+
+rulesClose.addEventListener("click", e => {
+  e.preventDefault();
+  hideModal(rulesModal);
+});
+
+function showModal(modal) {
+  modal.classList.add("modal-show");
+}
+
+function hideModal(modal) {
+  modal.classList.remove("modal-show");
 }
 
 
