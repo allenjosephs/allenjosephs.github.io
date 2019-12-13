@@ -8,7 +8,6 @@ const scrnDifficultySelect = document.querySelector("#difficulty");
 const scrnDifficultyDiv = document.querySelector(".difficulty");
 
 const scrnResetBtn = document.querySelector("#reset-button");
-const scrnSolveMeBtn = document.querySelector("#solve-me-button");
 
 const scrnRulesBtn = document.querySelector("#rules-button");
 const scrnRulesModal = document.querySelector("#rules-modal");
@@ -19,7 +18,7 @@ const scrnWinCloseBtn = document.querySelector("#close-win");
 
 const scrnMinMoveCount = document.querySelector("#min");
 const scrnMoveCount = document.querySelector("#count");
-// const solveTime = document.querySelector("#time"); <-- possible future enhancement
+const scrnSolveBtn = document.querySelector("#solve-me"); // <-- possible future enhancement
 
 let moveCount = 0;
 let minMoves = 0;
@@ -369,6 +368,105 @@ function hideModal(modal) {
   modal.classList.remove("modal-show");
 }
 
+//=========================================================================
+scrnSolveBtn.addEventListener("click", e => {
+  //Algorithm taken from https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+  hanoiSolver(scrnTower1.childNodes.length, t1, t3, t2);
+});
+
+
+function hanoiSolver(moveCount, sourceTower, targetTower, auxTower) {
+  callStack = []; // Global array to hold sequence of moves
+  hanoi(moveCount, sourceTower, targetTower, auxTower);
+  console.log(callStack);
+  moveDisk();
+}
+
+function hanoi(blockCount, sourceTower, targetTower, spareTower) {
+  // This function plays out the hanoi solution but doesn't make any object or screen
+  // changes.  Instead, it saves all the different moves within the callStack
+  // array. Algorithm credit: https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+
+  if (blockCount > 0) {
+    //Move n - 1 disks from source to spare
+    hanoi(blockCount - 1, sourceTower, spareTower, targetTower);
+
+    // Move the nth disk from source to target
+    callStack.push([sourceTower, targetTower]); // save parameters to callStack array
+
+    //Move the n - 1 disks that we left on auxiliary onto target
+    hanoi(blockCount - 1, spareTower, targetTower, sourceTower);
+  }
+}
+
+function moveDisk() {
+  // Algorithm credit: https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+  // This function will work through the callStack and perform the actual object changes
+  // and screen movements that were recorded during the hanoi() function.
+
+  let param;
+  let scrnBlock;
+  let scrnFromT;
+  let scrnToT;
+  let block;
+
+  if (callStack.length === 0) return;
+
+  param = callStack.shift(); // Get call parameters from callStack
+  fromT = param[0];
+  toT = param[1];
+
+  block = fromT.blocks.shift();
+  toT.blocks.unshift(block);
+  scrnBlock = document.getElementById(block.id);
+  scrnFromT = document.getElementById(fromT.id);
+  scrnToT = document.getElementById(toT.id);
+
+  //setTimeout(animateMove, 200);
+
+  (function(sBlk, sFTower, sTTower) {
+    setTimeout(function () {
+      animateMove(sBlk, sFTower, sTTower);
+    }, 200);
+  })(scrnBlock, scrnFromT, scrnToT);
+
+}
+
+function animateMove(scrnBlock, scrnFromT, scrnToT) {
+  scrnFromT.removeChild(scrnBlock);
+  scrnToT.insertBefore(scrnBlock, scrnToT.firstElementChild);
+  moveDisk();
+}
+
+// function moveElements(sourceTower, targetTower) {
+//    let div1 = sourceTower.removeChild(sourceTower.childNodes[0]);
+//    targetTower.insertBefore(div1, targetTower.childNodes[0]);
+// }
 
 
 
+
+// let sourceTower = [3, 2, 1];
+// let targetTower = [];
+// let spareTower = [];
+
+// scrnSolveBtn.addEventListener("click", e => {
+//   solver(scrnTower1.childNodes.length, scrnTower1, scrnTower3, scrnTower2);
+// });
+
+// function solver(blockCount, sourceTower, targetTower, spareTower) {
+//   // Algorithm taken from https://en.wikipedia.org/wiki/Tower_of_Hanoi
+
+//   if (blockCount > 0) {
+
+//     //Move n - 1 disks from source to spare
+//     solver(blockCount - 1, sourceTower, spareTower, targetTower);
+
+//     // Move the nth disk from source to target
+//     let div1 = sourceTower.removeChild(sourceTower.childNodes[0]);
+//     targetTower.insertBefore(div1, targetTower.childNodes[0]);
+
+//     //Move the n - 1 disks that we left on auxiliary onto target
+//       solver(blockCount - 1, spareTower, targetTower, sourceTower)
+//   }
+// }
