@@ -92,7 +92,6 @@ function initGame() {
   if (scrnDifficultySelect.classList.contains("disabled")) {
     enableElement(scrnDifficultySelect);
     enableElement(scrnDifficultyDiv);
-    enableElement(scrnSolveBtn);
 
     scrnDifficultySelect.value = 0;
     scrnResetBtn.innerText = "Start Game";
