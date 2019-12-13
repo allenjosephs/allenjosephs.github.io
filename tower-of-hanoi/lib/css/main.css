@@ -195,6 +195,7 @@ body {
   text-align: center;
 }
 
+/* Style the difficulty selector like the buttons */
 input[type='number'] {
   color: white;
   background-color: rgb(37, 30, 30);
@@ -216,9 +217,9 @@ input[type='number']::-webkit-outer-spin-button {
   grid-column: 1;
 }
 
-/* #solve-me-button {
-  grid-column: 3;
-} */
+#solve-me-button {
+  grid-column: 1;
+}
 
 .game-board-footer {
   grid-row: 5;

@@ -18,7 +18,7 @@ const scrnWinCloseBtn = document.querySelector("#close-win");
 
 const scrnMinMoveCount = document.querySelector("#min");
 const scrnMoveCount = document.querySelector("#count");
-const scrnSolveBtn = document.querySelector("#solve-me"); // <-- possible future enhancement
+const scrnSolveBtn = document.querySelector("#solve-me");
 
 let moveCount = 0;
 let minMoves = 0;
@@ -27,6 +27,11 @@ let timeToSolve = 0;
 // This will hold the object being dragged (a block).  In many cases drag
 // events do not have access to the object being dragged; this is my workaround.
 let scrnDraggedBlock;
+
+// This is an array of all queued timer ids (used in the solver feature).  If the user clicks reset game
+// while the solver is running, the program will iterate through all timers in this array and clear
+// them out.
+let timers = [];
 
 class Block {
   constructor(id) {
@@ -72,6 +77,12 @@ function initGame() {
   // user clicks the reset button.                                  //
   ////////////////////////////////////////////////////////////////////
 
+  // If the solver was running when the user clicked reset game, clear out all
+  // queued timers
+  while (timers.length > 0) {
+    clearTimeout(timers.pop());
+  }
+
   // Clear out the towers
   scrnTower1.innerHTML = "";
   scrnTower2.innerHTML = "";
@@ -81,6 +92,7 @@ function initGame() {
   if (scrnDifficultySelect.classList.contains("disabled")) {
     enableElement(scrnDifficultySelect);
     enableElement(scrnDifficultyDiv);
+    enableElement(scrnSolveBtn);
 
     scrnDifficultySelect.value = 0;
     scrnResetBtn.innerText = "Start Game";
@@ -111,6 +123,7 @@ function initGame() {
     updateInnerText(scrnResetBtn, "Reset Game");
     disableElement(scrnDifficultySelect);
     disableElement(scrnDifficultyDiv);
+    enableElement(scrnSolveBtn);
 
     let scrnNewBlock;
     for (let i = 0; i < t1.blocks.length; i++) {
@@ -125,6 +138,8 @@ function initGame() {
       scrnTower1.firstChild.classList.add("draggable");
       scrnTower1.firstChild.addEventListener("dragstart", drag);
     }
+  } else {
+    disableElement(scrnSolveBtn);
   }
 }
 
@@ -343,7 +358,7 @@ function disableElement(element) {
   element.setAttribute("disabled", true);
 }
 
-///// MODAL FUNCTIONS /////////////////////////////////////////////////
+// ==== MODAL FUNCTIONS ==== //
 
 scrnRulesBtn.addEventListener("click", e => {
   e.preventDefault();
@@ -368,9 +383,24 @@ function hideModal(modal) {
   modal.classList.remove("modal-show");
 }
 
-//=========================================================================
+
+// ==== START SOLVER EVENT LISTENERS AND HELPER FUNCTIONS ==== //
+// Note: Algorithm credit: https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+// Almost all the code below was adapted from techniques shown in this article.
+//
+// NOTES:
+// The main challenge is figuring out how to slow down the animiation given that the
+// solution is a recusive function.  Ultimately, the recusive function does not animate the moves,
+// but instead stores all moves in a stack (array).  Then, each move from that stack is
+// processed and animated individually using a setTimeout to drive the speed of that animation.
+
 scrnSolveBtn.addEventListener("click", e => {
-  //Algorithm taken from https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+  disableElement(scrnSolveBtn);
+
+  // Reset the board
+  resetBoard();
+
+  // Begin the automated solver
   hanoiSolver(scrnTower1.childNodes.length, t1, t3, t2);
 });
 
@@ -378,21 +408,20 @@ scrnSolveBtn.addEventListener("click", e => {
 function hanoiSolver(moveCount, sourceTower, targetTower, auxTower) {
   callStack = []; // Global array to hold sequence of moves
   hanoi(moveCount, sourceTower, targetTower, auxTower);
-  console.log(callStack);
   moveDisk();
 }
 
 function hanoi(blockCount, sourceTower, targetTower, spareTower) {
   // This function plays out the hanoi solution but doesn't make any object or screen
   // changes.  Instead, it saves all the different moves within the callStack
-  // array. Algorithm credit: https://www.codeproject.com/Articles/679651/Tower-of-Hanoi-in-JavaScript
+  // array.
 
   if (blockCount > 0) {
     //Move n - 1 disks from source to spare
     hanoi(blockCount - 1, sourceTower, spareTower, targetTower);
 
     // Move the nth disk from source to target
-    callStack.push([sourceTower, targetTower]); // save parameters to callStack array
+    callStack.push([sourceTower, targetTower]);
 
     //Move the n - 1 disks that we left on auxiliary onto target
     hanoi(blockCount - 1, spareTower, targetTower, sourceTower);
@@ -409,64 +438,83 @@ function moveDisk() {
   let scrnFromT;
   let scrnToT;
   let block;
+  let timerId;
 
-  if (callStack.length === 0) return;
+  if (callStack.length === 0) {
+    removeDraggable(scrnTower3.childNodes[0]);
+    return;
+  }
 
-  param = callStack.shift(); // Get call parameters from callStack
+  param = callStack.shift();
   fromT = param[0];
   toT = param[1];
 
+  // Move the block on the internal javascript objects
   block = fromT.blocks.shift();
   toT.blocks.unshift(block);
+
+  // Grab screen elements which represent the block to move
+  // source tower and target tower
   scrnBlock = document.getElementById(block.id);
   scrnFromT = document.getElementById(fromT.id);
   scrnToT = document.getElementById(toT.id);
 
-  //setTimeout(animateMove, 200);
-
+  // Animiate the move of a disk from
+  // source tower to target tower.  It is wrapped in a
+  // closure in order to prevent 'animiateMove' from
+  // immediately executing.
   (function(sBlk, sFTower, sTTower) {
-    setTimeout(function () {
+    timerId = setTimeout(function () {
       animateMove(sBlk, sFTower, sTTower);
     }, 200);
   })(scrnBlock, scrnFromT, scrnToT);
-
+  timers.push(timerId);
 }
 
 function animateMove(scrnBlock, scrnFromT, scrnToT) {
+  incrementMoveCount(1);
+  updateInnerText(scrnMoveCount, moveCount);
   scrnFromT.removeChild(scrnBlock);
   scrnToT.insertBefore(scrnBlock, scrnToT.firstElementChild);
   moveDisk();
 }
 
-// function moveElements(sourceTower, targetTower) {
-//    let div1 = sourceTower.removeChild(sourceTower.childNodes[0]);
-//    targetTower.insertBefore(div1, targetTower.childNodes[0]);
-// }
+function resetBoard() {
+  scrnTower1.innerHTML = "";
+  scrnTower2.innerHTML = "";
+  scrnTower3.innerHTML = "";
 
+  let blockArray = [];
+  for (let i = 1; i <= parseInt(scrnDifficultySelect.value); i++) {
+    blockArray.push(new Block(i));
+  }
 
+  t1 = new Tower(scrnTower1.getAttribute("id"), blockArray);
+  t2 = new Tower(scrnTower2.getAttribute("id"));
+  t3 = new Tower(scrnTower3.getAttribute("id"));
 
+  updateInnerText(scrnMinMoveCount, calcMinMoves(t1.blocks.length));
 
-// let sourceTower = [3, 2, 1];
-// let targetTower = [];
-// let spareTower = [];
+  resetMoveCount();
+  updateInnerText(scrnMoveCount, moveCount);
 
-// scrnSolveBtn.addEventListener("click", e => {
-//   solver(scrnTower1.childNodes.length, scrnTower1, scrnTower3, scrnTower2);
-// });
+  //updateInnerText(scrnResetBtn, "Reset Game");
+  //disableElement(scrnDifficultySelect);
+  //disableElement(scrnDifficultyDiv);
 
-// function solver(blockCount, sourceTower, targetTower, spareTower) {
-//   // Algorithm taken from https://en.wikipedia.org/wiki/Tower_of_Hanoi
+  let scrnNewBlock;
+  for (let i = 0; i < t1.blocks.length; i++) {
+    scrnNewBlock = document.createElement("div");
+    scrnNewBlock.setAttribute("id", t1.blocks[i].id);
+    scrnNewBlock.classList.add("block");
 
-//   if (blockCount > 0) {
+    // The level class is used by the CSS to size the blocks correctly
+    scrnNewBlock.classList.add(`level${t1.blocks[i].id}`);
+    scrnTower1.appendChild(scrnNewBlock);
+    scrnTower1.firstChild.setAttribute("draggable", true);
+    scrnTower1.firstChild.classList.add("draggable");
+    scrnTower1.firstChild.addEventListener("dragstart", drag);
+  }
+}
 
-//     //Move n - 1 disks from source to spare
-//     solver(blockCount - 1, sourceTower, spareTower, targetTower);
-
-//     // Move the nth disk from source to target
-//     let div1 = sourceTower.removeChild(sourceTower.childNodes[0]);
-//     targetTower.insertBefore(div1, targetTower.childNodes[0]);
-
-//     //Move the n - 1 disks that we left on auxiliary onto target
-//       solver(blockCount - 1, spareTower, targetTower, sourceTower)
-//   }
-// }
+// ==== END SOLVER EVENT LISTENERS AND HELPER FUNCTIONS ==== //
